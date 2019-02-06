@@ -3,6 +3,7 @@
 #include "gf2d_sprite.h"
 #include "simple_logger.h"
 
+
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
