@@ -1,4 +1,7 @@
 #include "entity.h"
+#include "simple_logger.h"
+#include "gf2d_draw.h"
+
 
 //the code sample we made above
 
@@ -12,13 +15,13 @@ static EntityManager entityManager = { 0 };
 void entity_system_init(Uint32 maxEntities){
 
 	if (!maxEntities){
-		//slog("Cannot allocate zero entities");
+		//slog("Cannot allocate zero entities");     Doesnt work yet, likely just needs an include for simple logger
 		return;
 	}
 
 	entityManager.entityList = (Entity*)malloc(sizeof(Entity)*maxEntities);
 	if (!entityManager.entityList){
-		//slog("failed to allocate %i entities for system", maxEntities);
+		//slog("failed to allocate %i entities for system", maxEntities);  Doesnt work yet, likely just needs an include for simple logger
 	}
 	entityManager.maxEntities = maxEntities;
 	memset(entityManager.entityList, 0, sizeof(Entity)*maxEntities);
