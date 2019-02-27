@@ -2,6 +2,7 @@
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
 #include "simple_logger.h"
+#include "entity.h"
 
 
 int main(int argc, char * argv[])
@@ -11,6 +12,15 @@ int main(int argc, char * argv[])
     const Uint8 * keys;
     Sprite *sprite;
     
+	//TESTING IF I CAN DRAW AN ENTITY Going to crete entity here
+	Entity test;
+	test.position = vector2d(0,1);
+	//test.sprite = gf2d_sprite_load_image("images/space_bug.png");
+	test.scale = vector2d(1, 1);
+	test._inuse = 1;
+	test.frame = 0;
+	Entity *self = &test;
+
     int mx,my;
     float mf = 0;
     Sprite *mouse;
@@ -34,6 +44,7 @@ int main(int argc, char * argv[])
     /*demo setup*/
     sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
+	test.sprite = gf2d_sprite_load_all("images/space_bug.png",128,128,16);
     /*main game loop*/
     while(!done)
     {
@@ -48,8 +59,11 @@ int main(int argc, char * argv[])
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
-            gf2d_sprite_draw_image(sprite,vector2d(0,0));
-            
+           gf2d_sprite_draw_image(sprite,vector2d(0,0));
+
+			//Entity drawn
+			entity_draw(self);
+			entity_update(self,(int)mf); 
             //UI elements last
             gf2d_sprite_draw(
                 mouse,

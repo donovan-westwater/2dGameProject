@@ -16,6 +16,7 @@ typedef enum
 typedef struct Entity_S
 {
 	//Makes a entity as private or shouldnt be touched from outside
+	int id; 
 	int _inuse;
 	EntityState state;
 	//does what it describes
@@ -23,12 +24,14 @@ typedef struct Entity_S
 	//This is the center point a.k.a postion
 	Vector2D position;
 	Sprite *sprite;
-	float frame;
+	Vector2D scale;
+	Uint32 frame;
 
 	//This are function pointers that act as functions that entities need. Note the pointers to keep track of self
 	void(*update)(struct Entity_S * self);
 	void(*touch)(struct Entity_S * self, struct Entity_S * other);
 	void(*think)(struct Entity_S * self);
+	void(*free)(struct Entity_S *self);     /**<called when the entity is freed for any custom cleanup*/
 
 
 }Entity;
@@ -45,7 +48,7 @@ void entity_system_init(Uint32 maxEntities);
 *
 *@brief return a pointer to a new entity
 *@param NULL if out of entities or system not initialized, a pointer to a block entity otherwise
-*
+*@warning Currently does only the bare minimum and will need to be revisted
 */
 Entity *entity_new();
 
@@ -64,7 +67,13 @@ void entity_free(Entity *self);
 *
 */
 void entity_draw(Entity *self);
+/*
+*
+*@brief updates value and current frame of entity
+*@param get the entity that needs updating
+*
+*/
 
-
+void entity_update(Entity *ent);
 
 #endif
