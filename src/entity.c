@@ -47,8 +47,13 @@ Entity *entity_new(){
 	for (int i = 0; i < entityManager.maxEntities; i++){
 		if (entityManager.entityList[i]._inuse == 0){
 			memset(&entityManager.entityList[i], 0, sizeof(Entity));
+			//When creating different monsters, Get rid of this. This is temp, use inheirance to define these values!!!!!!
+			entityManager.entityList[i].position = vector2d(0, 1);
+			entityManager.entityList[i].sprite = gf2d_sprite_load_image("images/space_bug.png");
+			entityManager.entityList[i].scale = vector2d(1, 1);
 			entityManager.entityList[i]._inuse = 1;
-			
+			entityManager.entityList[i].frame = 0;
+			entityManager.entityList[i].update = entity_update;
 			return &entityManager.entityList[i];
 		}
 	}
@@ -78,7 +83,23 @@ void entity_free(Entity *self){
 
 
 }
-void entity_update(Entity *ent,float newFrame){
-	ent->frame += newFrame;
+
+void entity_update(Entity *ent){
+	ent->frame += 0.1;
+	if (ent->frame >= 16.0)ent->frame = 0;
+	ent->position.x += 0.5;
+	slog("postion of x: %lf", ent->position.x);
+	if (ent->position.x >= 100)ent->position.x = -ent->position.x;
+	entity_draw(ent);
 	//put everything else here later
+}
+
+void entity_update_all(){
+	Entity *self;
+	for (int i = 0; i < entityManager.maxEntities; i++){
+		if (entityManager.entityList[i]._inuse == 1){
+			self = &entityManager.entityList[i];
+			entityManager.entityList[i].update(self);
+		}
+	}
 }

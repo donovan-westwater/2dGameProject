@@ -14,7 +14,8 @@ int main(int argc, char * argv[])
     
 	//TESTING IF I CAN DRAW AN ENTITY Going to crete entity here
 	Entity test;
-	test.position = vector2d(0,1);
+	test.position = vector2d(2,1);
+	test.update = entity_update;
 	//test.sprite = gf2d_sprite_load_image("images/space_bug.png");
 	test.scale = vector2d(1, 1);
 	test._inuse = 1;
@@ -39,13 +40,19 @@ int main(int argc, char * argv[])
         0);
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
+	entity_system_init(16);
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
     sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
 	test.sprite = gf2d_sprite_load_all("images/space_bug.png",128,128,16);
-    /*main game loop*/
+   
+	/*Starting entities*/
+	entity_new();
+	entity_new()->position = vector2d(1,50);
+	
+	/*main game loop*/
     while(!done)
     {
         SDL_PumpEvents();   // update SDL's internal event structures
@@ -62,8 +69,7 @@ int main(int argc, char * argv[])
            gf2d_sprite_draw_image(sprite,vector2d(0,0));
 
 			//Entity drawn
-			entity_draw(self);
-			entity_update(self,(int)mf); 
+			entity_update_all(); 
             //UI elements last
             gf2d_sprite_draw(
                 mouse,
