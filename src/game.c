@@ -12,15 +12,7 @@ int main(int argc, char * argv[])
     const Uint8 * keys;
     Sprite *sprite;
     
-	//TESTING IF I CAN DRAW AN ENTITY Going to crete entity here
-	Entity test;
-	test.position = vector2d(2,1);
-	test.update = entity_update;
-	//test.sprite = gf2d_sprite_load_image("images/space_bug.png");
-	test.scale = vector2d(1, 1);
-	test._inuse = 1;
-	test.frame = 0;
-	Entity *self = &test;
+	
 
     int mx,my;
     float mf = 0;
@@ -46,7 +38,7 @@ int main(int argc, char * argv[])
     /*demo setup*/
     sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
-	test.sprite = gf2d_sprite_load_all("images/space_bug.png",128,128,16);
+	
    
 	/*Starting entities*/
 	entity_new();
@@ -69,6 +61,7 @@ int main(int argc, char * argv[])
            gf2d_sprite_draw_image(sprite,vector2d(0,0));
 
 			//Entity drawn
+		   entity_think_all();
 			entity_update_all(); 
             //UI elements last
             gf2d_sprite_draw(

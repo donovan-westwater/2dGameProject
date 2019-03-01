@@ -25,6 +25,7 @@ typedef struct Entity_S
 
 	//This is the center point a.k.a postion
 	Vector2D position; /**<EXPLAIN TYPE>*/
+	//Shape hitbox    /**The hitbox for the entity. Good for touch fucntions**/
 	Sprite *sprite; /**<EXPLAIN TYPE>*/
 	Vector2D scale; /**<EXPLAIN TYPE>*/
 	Uint32 frame; /**<EXPLAIN TYPE>*/
@@ -82,4 +83,10 @@ void entity_update(Entity *ent);
 *
 */
 void entity_update_all();
+/*
+*
+*@brief calls all entities think functions in the manager
+*
+*/
+void entity_think_all();
 #endif

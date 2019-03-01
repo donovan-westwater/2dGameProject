@@ -88,6 +88,8 @@
     <ClCompile Include="..\..\src\gf2d_sprite.c" />
     <ClCompile Include="..\..\src\gf2d_vector.c" />
     <ClCompile Include="..\..\src\simple_logger.c" />
+    <ClCompile Include="collisions.c" />
+    <ClCompile Include="Shape.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\gf2d_draw.h" />
@@ -98,6 +100,8 @@
     <ClInclude Include="..\..\include\gf2d_vector.h" />
     <ClInclude Include="..\..\include\simple_logger.h" />
     <ClInclude Include="..\include\entity.h" />
+    <ClInclude Include="collisions.h" />
+    <ClInclude Include="shape.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

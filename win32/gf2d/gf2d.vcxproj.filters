@@ -36,6 +36,12 @@
     <ClCompile Include="..\..\src\entity.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shape.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="collisions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\gf2d_draw.h">
@@ -60,6 +66,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="collisions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

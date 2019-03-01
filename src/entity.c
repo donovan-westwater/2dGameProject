@@ -5,6 +5,7 @@
 
 //the code sample we made above
 //A bunch of this code comes from dj's project. This is to give me a start and help me understand systems
+//ADD THINK SYSTEM!
 
 typedef struct EntityManager_S{
 	Entity *entityList;
@@ -49,7 +50,7 @@ Entity *entity_new(){
 			memset(&entityManager.entityList[i], 0, sizeof(Entity));
 			//When creating different monsters, Get rid of this. This is temp, use inheirance to define these values!!!!!!
 			entityManager.entityList[i].position = vector2d(0, 1);
-			entityManager.entityList[i].sprite = gf2d_sprite_load_image("images/space_bug.png");
+			entityManager.entityList[i].sprite = gf2d_sprite_load_all("images/space_bug.png", 128, 128, 16);
 			entityManager.entityList[i].scale = vector2d(1, 1);
 			entityManager.entityList[i]._inuse = 1;
 			entityManager.entityList[i].frame = 0;
@@ -103,3 +104,14 @@ void entity_update_all(){
 		}
 	}
 }
+void entity_think_all(){
+		int i;
+		for (i = 0; i < entityManager.maxEntities; i++)
+		{
+			if (entityManager.entityList[i]._inuse == 0)continue;
+			if (entityManager.entityList[i].think != NULL){
+				entityManager.entityList[i].think(&entityManager.entityList[i]);
+			}
+		}
+}
+
