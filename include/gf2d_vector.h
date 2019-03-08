@@ -65,7 +65,24 @@ Vector3D vector3d(double x, double y, double z);
  * @brief create and return an Vector4D
  */
 Vector4D vector4d(double x, double y, double z, double w);
+/**
+* @brief Returns true if he distance is less than the distance given
+* @param a Vector to act as a point
+* @param a second Vector to act as another point
+* @param a float to act as the size to check againest
+*/
+Bool vector2d_distance_between_less_than(Vector2D p1, Vector2D p2, float size);
+Bool vector3d_distance_between_less_than(Vector3D p1, Vector3D p2, float size);
+Bool vector4d_distance_between_less_than(Vector4D p1, Vector4D p2, float size);
 
+/**
+* @brief Returns the magnitude of the vector between 2 vectors
+* @param a Vector
+* @param a second Vector 
+*/
+float vector2d_magnitude_between(Vector2D a, Vector2D b);
+float vector3d_magnitude_between(Vector3D a, Vector3D b);
+float vector4d_magnitude_between(Vector4D a, Vector4D b);
 /**
  * @brief sets the outvector to a unit vector pointing at the angle specified
  * @param out output.  Vector will be set to a unit vector rotated by radians

@@ -36,17 +36,29 @@
     <ClCompile Include="..\..\src\entity.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Shape.c">
+    <ClCompile Include="collisions.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="collisions.c">
+    <ClCompile Include="List.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Body.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dynamic_body.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="space.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gf2d_color.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shape.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\gf2d_draw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\gf2d_graphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -72,6 +84,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="collisions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gf2d_color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gf2d_draw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="List.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Body.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="space.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dynamic_body.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

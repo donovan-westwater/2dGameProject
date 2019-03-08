@@ -2,8 +2,10 @@
 #define __ENTITY_H__
 
 #include "gf2d_sprite.h"
+#include "shape.h"
 
 //Writing this code by following DJ, so is NOT MINE (This should act as a partially filled road map. Rework as needed!
+//If an include doesnt work, put the include into the win32 include folder and the c file into the 2d game src folder
 typedef enum
 {
 	ES_Idle, /**<EXPLAIN TYPE>*/
@@ -25,7 +27,8 @@ typedef struct Entity_S
 
 	//This is the center point a.k.a postion
 	Vector2D position; /**<EXPLAIN TYPE>*/
-	//Shape hitbox    /**The hitbox for the entity. Good for touch fucntions**/
+	Shape hitbox;    /**The hitbox for the entity. Good for touch fucntions**/
+	//Add a velocity vector here to test if the intersection math works
 	Sprite *sprite; /**<EXPLAIN TYPE>*/
 	Vector2D scale; /**<EXPLAIN TYPE>*/
 	Uint32 frame; /**<EXPLAIN TYPE>*/
