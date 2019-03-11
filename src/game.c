@@ -3,7 +3,8 @@
 #include "gf2d_sprite.h"
 #include "simple_logger.h"
 #include "entity.h"
-
+#include "space.h"
+#include "Body.h"
 
 int main(int argc, char * argv[])
 {
@@ -18,6 +19,8 @@ int main(int argc, char * argv[])
     float mf = 0;
     Sprite *mouse;
     Vector4D mouseColor = {255,100,255,200};
+	//For basic collision, create a space variable here (Keep in mind it is going to get merged into the level system later!)
+	Space *space;
     
     /*program initializtion*/
     init_logger("gf2d.log");
@@ -38,11 +41,17 @@ int main(int argc, char * argv[])
     /*demo setup*/
     sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
-	
+	space = space_new_full(
+		1,
+		shape_rect(0, 0, 1200, 720).s.r,
+		0.1,
+		vector2d(0, 0),
+		0.0,
+		0.1);
    
 	/*Starting entities*/
 	entity_new();
-	entity_new()->position = vector2d(1,50);
+	entity_new()->hitbox.position = vector2d(1,50);
 	
 	/*main game loop*/
     while(!done)
@@ -64,6 +73,7 @@ int main(int argc, char * argv[])
 		   entity_think_all();
 			entity_update_all(); 
             //UI elements last
+			space_draw(space, vector2d(0, 0));
             gf2d_sprite_draw(
                 mouse,
                 vector2d(mx,my),

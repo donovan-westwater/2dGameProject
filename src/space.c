@@ -1,0 +1,338 @@
+#include "space.h"
+#include "gf2d_draw.h"
+#include "simple_logger.h"
+#include "dynamic_body.h"
+#include <stdlib.h>
+
+
+Uint8 body_shape_collide(Body *a, Shape *s, Vector2D *poc, Vector2D *normal);
+
+void free_shapes(void *data, void *context)
+{
+	Shape *shape;
+	if (!data)return;
+	shape = (Shape*)data;
+	free(shape);
+}
+
+void free_dynamic_bodies(void *data, void *context)
+{
+	if (!data)return;
+	dynamic_body_free((DynamicBody*)data);
+}
+
+void space_free(Space *space)
+{
+	if (!space)return;
+
+	//static shapes ARE owned by the space, so are deleted when the space goes away
+	list_foreach(space->staticShapes, free_shapes, NULL);
+	list_foreach(space->dynamicBodyList, free_dynamic_bodies, NULL);
+	list_delete(space->staticShapes);
+	free(space);
+}
+
+Space *space_new_full(
+	int         precision,
+	Rect        bounds,
+	float       timeStep,
+	Vector2D    gravity,
+	float       dampening,
+	float       slop)
+{
+	Space *space;
+	space = space_new();
+	if (!space)return NULL;
+	rect_copy(space->bounds, bounds);
+	vector2d_copy(space->gravity, gravity);
+	space->timeStep = timeStep;
+	space->precision = precision;
+	space->dampening = dampening;
+	space->slop = slop;
+	return space;
+}
+
+Space *space_new()
+{
+	Space *space;
+	space = (Space *)malloc(sizeof(Space));
+	if (!space)
+	{
+		slog("failed to allocate space for Space");
+		return NULL;
+	}
+	memset(space, 0, sizeof(Space));
+	space->dynamicBodyList = list_new();
+	space->staticShapes = list_new();
+	return space;
+}
+
+void space_add_static_shape(Space *space, Shape shape)
+{
+	Shape *newShape;
+	if (!space)
+	{
+		slog("no space provided");
+		return;
+	}
+	newShape = (Shape*)malloc(sizeof(shape));
+	if (!newShape)
+	{
+		slog("failed to allocate new space for the shape");
+		return;
+	}
+	memcpy(newShape, &shape, sizeof(Shape));
+	space->staticShapes = list_append(space->staticShapes, (void *)newShape);
+}
+
+void space_remove_body(Space *space, Body *body)
+{
+	int i, count;
+	DynamicBody *db = NULL;
+	if (!space)
+	{
+		slog("no space provided");
+		return;
+	}
+	if (!body)
+	{
+		slog("no body provided");
+		return;
+	}
+	if (space->dynamicBodyList)
+	{
+		count = list_get_count(space->dynamicBodyList);
+		for (i = 0; i < count; i++)
+		{
+			db = (DynamicBody*)list_get_nth(space->dynamicBodyList, i);
+			if (!db)continue;
+			if (db->body != body)continue;
+			dynamic_body_free(db);
+			list_delete_nth(space->dynamicBodyList, i);
+			break;
+		}
+	}
+}
+
+void space_add_body(Space *space, Body *body)
+{
+	DynamicBody *db = NULL;
+	if (!space)
+	{
+		slog("no space provided");
+		return;
+	}
+	if (!body)
+	{
+		slog("no body provided");
+		return;
+	}
+	db = dynamic_body_new();
+	if (!db)return;
+	db->body = body;
+	db->id = space->idpool++;
+	space->dynamicBodyList = list_append(space->dynamicBodyList, (void *)db);
+}
+
+void space_draw(Space *space, Vector2D offset)
+{
+	int i, count;
+	SDL_Rect r;
+	DynamicBody *db = NULL;
+	if (!space)
+	{
+		slog("no space provided");
+		return;
+	}
+	r = rect_to_sdl_rect(space->bounds);
+	vector2d_add(r, r, offset);
+	gf2d_draw_rect(r, vector4d(255, 0, 0, 255));
+	count = list_get_count(space->dynamicBodyList);
+	for (i = 0; i < count; i++)
+	{
+		db = (DynamicBody*)list_get_nth(space->dynamicBodyList, i);
+		if (!db)continue;
+		body_draw(db->body, offset);
+	}
+	count = list_get_count(space->staticShapes);
+	for (i = 0; i < count; i++)
+	{
+		shape_draw(*(Shape *)list_get_nth(space->staticShapes, i), gf2d_color8(0, 255, 0, 255), offset);
+	}
+}
+
+void space_dynamic_bodies_world_clip(Space *space, DynamicBody *db, float t)
+{
+	int i, count;
+	Shape *shape;
+	Collision *collision;
+	count = list_get_count(space->staticShapes);
+	for (i = 0; i < count; i++)
+	{
+		shape = (Shape*)list_get_nth(space->staticShapes, i);
+		if (!shape)continue;
+		// check for layer compatibility
+		collision = dynamic_body_shape_collision_check(db, shape, t);
+		if (collision == NULL)continue;
+		db->collisionList = list_append(db->collisionList, (void*)collision);
+	}
+	//check if the dynamic body is leaving the level bounds
+	collision = dynamic_body_bounds_collision_check(db, space->bounds, t);
+	if (collision != NULL)
+	{
+		db->collisionList = list_append(db->collisionList, (void*)collision);
+	}
+}
+
+void space_dynamic_bodies_step(Space *space, DynamicBody *db, float t)
+{
+	DynamicBody *other;
+	Collision *collision;
+	Vector2D oldPosition;
+	Vector2D reflected, total;
+	int normalCount;
+	int i, count;
+	if ((!space) || (!db))return;
+	// save our place in case of collision
+	vector2d_copy(oldPosition, db->position);
+	vector2d_add(db->position, db->position, db->velocity);
+
+	dynamic_body_clear_collisions(db);
+	// check against dynamic bodies
+	count = list_get_count(space->dynamicBodyList);
+	for (i = 0; i < count; i++)
+	{
+		other = (DynamicBody*)list_get_nth(space->dynamicBodyList, i);
+		if (!other)continue;
+		if (other == db)continue;   // skip checking outself
+		// check for layer compatibility
+		collision = dynamic_body_collision_check(db, other, t);
+		if (collision == NULL)continue;
+		db->collisionList = list_append(db->collisionList, (void*)collision);
+	}
+
+	if (db->body->worldclip)
+	{
+		space_dynamic_bodies_world_clip(space, db, t);
+	}
+	if (db->blocked)
+	{
+		vector2d_copy(db->position, oldPosition);
+		dynamic_body_resolve_overlap(db, space->slop);
+		if (db->body->elasticity > 0)
+		{
+			count = list_get_count(db->collisionList);
+			vector2d_clear(total);
+			normalCount = 0;
+			for (i = 0; i < count; i++)
+			{
+				collision = (Collision*)list_get_nth(db->collisionList, i);
+				if (!collision)continue;
+				vector2d_add(db->position, db->position, collision->normal);
+				reflected = dynamic_body_bounce(db, collision->normal);
+				if (vector2d_magnitude_squared(reflected) != 0)
+				{
+					vector2d_add(total, total, reflected);
+					normalCount++;
+				}
+			}
+			if (normalCount)
+			{
+				//                vector2d_scale(total,total,(1.0/normalCount)*space->slop);
+				//                db->velocity = total;
+				vector2d_set_magnitude(&db->velocity, db->speed);
+			}
+		}
+	}
+}
+
+void space_step(Space *space, float t)
+{
+	DynamicBody *db = NULL;
+	int i, count;
+	if (!space)return;
+	count = list_get_count(space->dynamicBodyList);
+	for (i = 0; i < count; i++)
+	{
+		db = (DynamicBody*)list_get_nth(space->dynamicBodyList, i);
+		if (!db)continue;
+		if (db->blocked)
+		{
+			continue;// no need to move something that has already collided
+		}
+		space_dynamic_bodies_step(space, db, t);
+	}
+}
+
+void space_reset_bodies(Space *space)
+{
+	int i, count;
+	if (!space)return;
+	count = list_get_count(space->dynamicBodyList);
+	for (i = 0; i < count; i++)
+	{
+		dynamic_body_reset((DynamicBody*)list_get_nth(space->dynamicBodyList, i), space->timeStep);
+	}
+}
+
+void space_update_bodies(Space *space, float loops)
+{
+	DynamicBody *db = NULL;
+	int i, count;
+	if (!space)return;
+	count = list_get_count(space->dynamicBodyList);
+	for (i = 0; i < count; i++)
+	{
+		db = (DynamicBody*)list_get_nth(space->dynamicBodyList, i);
+		if (!db)continue;
+		dynamic_body_update(db, loops);
+	}
+}
+
+void space_update(Space *space)
+{
+	float s;
+	float loops = 0;
+	if (!space)return;
+	space_fix_overlaps(space, 8);
+	space_reset_bodies(space);
+	// reset all body tracking
+	for (s = 0; s <= 1; s += space->timeStep)
+	{
+		space_step(space, s);
+		loops = loops + 1;
+	}
+	space_update_bodies(space, loops);
+}
+
+Uint8 space_resolve_overlap(Space *space)
+{
+	DynamicBody *db = NULL;
+	int i, count;
+	int clipped = 0;
+	if (!space)return 1;
+	space_reset_bodies(space);
+	// for each dynamic body, get list of staic shapes that are clipped
+	count = list_get_count(space->dynamicBodyList);
+	for (i = 0; i < count; i++)
+	{
+		db = (DynamicBody*)list_get_nth(space->dynamicBodyList, i);
+		if (!db)continue;
+		space_dynamic_bodies_world_clip(space, db, 0);
+		if (list_get_count(db->collisionList))
+		{
+			dynamic_body_resolve_overlap(db, space->slop);
+		}
+	}
+	return clipped;
+}
+
+void space_fix_overlaps(Space *space, Uint8 tries)
+{
+	int i = 0;
+	int done = 0;
+	for (i = 0; (i < tries) & (done != 1); i++)
+	{
+		done = space_resolve_overlap(space);
+	}
+}
