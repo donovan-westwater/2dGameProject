@@ -95,4 +95,33 @@ void entity_update_all();
 *
 */
 void entity_think_all();
+/*
+*
+*@brief sets the current postion to the hitbox
+*@param takes its self as an entity 
+*/
+void entity_pre_sync_body(Entity *self);
+/*
+*
+*@brief sets the current hitbox postion to the entity's
+*@param takes its self as an entity
+*/
+void entity_post_sync_body(Entity *self);
+/*
+*
+*@Calls a pre sync functions in the manager
+*
+*/
+void entity_pre_sync_all();
+/*
+*
+*@brief Calls all post sync functions in the manager
+*
+*/
+void entity_post_sync_all();
+
+
+
+
+
 #endif

@@ -47,12 +47,16 @@ int main(int argc, char * argv[])
 		0.1,
 		vector2d(0, 0),
 		0.0,
-		0.1);
+		1.5); //was oringally 0.5
    
 	/*Starting entities*/
 	entity_new();
-	entity_new()->hitbox.position = vector2d(1,50);
-	
+	Entity *other = entity_new();
+	other->position = vector2d(100,150);
+	other->velocity = vector2d(1, -1);
+	//other->hitbox.position = other->position;
+	//other->hitbox.velocity = other->velocity;
+	adding_all_bodies_to_space(space);
 	/*main game loop*/
     while(!done)
     {
@@ -68,9 +72,14 @@ int main(int argc, char * argv[])
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
            gf2d_sprite_draw_image(sprite,vector2d(0,0));
-
-			//Entity drawn
+		   
 		   entity_think_all();
+			//Physics update
+		   entity_pre_sync_all();
+		   space_update(space);
+		   entity_post_sync_all();
+
+		   //Entity drawn
 			entity_update_all(); 
             //UI elements last
 			space_draw(space, vector2d(0, 0));
@@ -87,6 +96,7 @@ int main(int argc, char * argv[])
         
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
         slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
+		
     }
     slog("---==== END ====---");
     return 0;

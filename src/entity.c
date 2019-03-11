@@ -1,6 +1,7 @@
 #include "entity.h"
 #include "simple_logger.h"
 #include "gf2d_draw.h"
+#include "space.h"
 
 
 //the code sample we made above
@@ -55,8 +56,9 @@ Entity *entity_new(){
 			entityManager.entityList[i].shape = shape_circle(entityManager.entityList[i].position.x, 
 										entityManager.entityList[i].position.y,10); //This should help tie the hitbox and the visual togehter
 			//entityManager.entityList[i].hitbox; //Need to figure out how to add the hitbox (Its a Body Struct)
-			entityManager.entityList[i].hitbox.velocity = vector2d(1,1);
-			entityManager.entityList[i].hitbox.position = vector2d(0, 1);
+			entityManager.entityList[i].velocity = vector2d(1,1);
+			entityManager.entityList[i].hitbox.velocity = vector2d(1, 1);
+			entityManager.entityList[i].hitbox.position = vector2d(110, 500);
 			entityManager.entityList[i].hitbox.shape = &entityManager.entityList[i].shape;
 			entityManager.entityList[i]._inuse = 1;
 			entityManager.entityList[i].frame = 0;
@@ -96,16 +98,17 @@ void entity_update(Entity *ent){
 	if (ent->frame >= 16.0)ent->frame = 0;
 	//ent->position.x += 0.5;
 	slog("postion of x: %lf    hitbox postion of x: %lf", ent->position.x,ent->hitbox.position.x);
+	slog("Velocity of x: %lf    hitbox velocity of x: %lf", ent->velocity.x, ent->hitbox.velocity.x);
 	//if (ent->position.x >= 100)ent->position.x = -ent->position.x;
 
-	ent->hitbox.position.x += ent->hitbox.velocity.x;
-	ent->hitbox.position.y += ent->hitbox.velocity.y;
+	ent->position.x += ent->velocity.x;
+	ent->position.y += ent->velocity.y;
 	//Updates hitbox to new postion
-	vector2d_copy(ent->position, ent->hitbox.position);
-	vector2d_copy(ent->velocity, ent->hitbox.velocity);
+	//vector2d_copy(ent->position, ent->hitbox.position);
+	//vector2d_copy(ent->velocity, ent->hitbox.velocity);
 	entity_draw(ent);
-	Body *draw = &ent->hitbox;
-	body_draw(draw,vector2d(0,0));
+	//Body *draw = &ent->hitbox;
+	//body_draw(draw,vector2d(0,0));
 	
 	//put everything else here later
 }
@@ -130,5 +133,55 @@ void entity_think_all(){
 				entityManager.entityList[i].think(&entityManager.entityList[i]);
 			}
 		}
+}/** @brief adds all existing entites' bodies to the space's list
+ * @param the space to add the bodies
+ * @Note: this is more of a test function. Once the map map is added, this should not be used
+ */
+void adding_all_bodies_to_space(Space* space){
+	for (int i = 0; i < entityManager.maxEntities; i++){
+		if (entityManager.entityList[i]._inuse == 1){
+			entityManager.entityList[i].hitbox.cliplayer = 1;
+			entityManager.entityList[i].hitbox.touchlayer = 1;
+			entityManager.entityList[i].hitbox.worldclip = 1;
+			entityManager.entityList[i].hitbox.elasticity = 100;
+			entityManager.entityList[i].hitbox.mass = 10;
+			space_add_body(space,&entityManager.entityList[i].hitbox);
+		}
+	}
+}
+
+
+void entity_pre_sync_body(Entity *self)
+{
+	if (!self)return;// nothin to do
+	vector2d_copy(self->hitbox.velocity, self->velocity);
+	vector2d_copy(self->hitbox.position, self->position);
+}
+
+void entity_post_sync_body(Entity *self)
+{
+	if (!self)return;// nothin to do
+	//    slog("entity %li : %s old position(%f,%f) => new position (%f,%f)",self->id,self->name,self->position,self->body.position);
+	vector2d_copy(self->position, self->hitbox.position);
+	vector2d_copy(self->velocity, self->hitbox.velocity);
+}
+void entity_pre_sync_all()
+{
+    int i;
+    for (i = 0; i < entityManager.maxEntities;i++)
+    {
+        if (entityManager.entityList[i]._inuse == 0)continue;
+        entity_pre_sync_body(&entityManager.entityList[i]);
+    }
+}
+
+void entity_post_sync_all()
+{
+    int i;
+    for (i = 0; i < entityManager.maxEntities;i++)
+    {
+        if (entityManager.entityList[i]._inuse == 0)continue;
+        entity_post_sync_body(&entityManager.entityList[i]);
+    }
 }
 
