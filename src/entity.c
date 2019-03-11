@@ -53,9 +53,9 @@ Entity *entity_new(){
 			entityManager.entityList[i].position = vector2d(0, 1);
 			entityManager.entityList[i].sprite = gf2d_sprite_load_all("images/space_bug.png", 128, 128, 16);
 			entityManager.entityList[i].scale = vector2d(1, 1);
-			entityManager.entityList[i].shape = shape_circle(entityManager.entityList[i].position.x, 
-										entityManager.entityList[i].position.y,10); //This should help tie the hitbox and the visual togehter
-			//entityManager.entityList[i].hitbox; //Need to figure out how to add the hitbox (Its a Body Struct)
+			//entityManager.entityList[i].shape = shape_circle(entityManager.entityList[i].position.x, 
+			//							entityManager.entityList[i].position.y,10); //This should help tie the hitbox and the visual togehter
+			entityManager.entityList[i].shape = shape_rect(32, 32, 64, 64); //To pefectly bound sprite, use the width and heigth of the sprite as the shape parameters
 			entityManager.entityList[i].velocity = vector2d(1,1);
 			entityManager.entityList[i].hitbox.velocity = vector2d(1, 1);
 			entityManager.entityList[i].hitbox.position = vector2d(110, 500);
