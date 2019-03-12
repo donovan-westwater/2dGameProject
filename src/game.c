@@ -47,7 +47,7 @@ int main(int argc, char * argv[])
 		0.1,
 		vector2d(0, 0),
 		0.0,
-		1.5); //was oringally 0.5
+		0.5); //was oringally 0.5
    
 	/*Starting entities*/
 	entity_new();
@@ -57,6 +57,8 @@ int main(int argc, char * argv[])
 	//other->hitbox.position = other->position;
 	//other->hitbox.velocity = other->velocity;
 	adding_all_bodies_to_space(space);
+	Shape wall = shape_rect(500,200,100,50);
+	space_add_static_shape(space, wall);
 	/*main game loop*/
     while(!done)
     {
