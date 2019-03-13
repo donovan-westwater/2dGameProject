@@ -21,6 +21,7 @@ Entity *player_new(Vector2D position){
 	Entity *self = entity_new();
 	if (!self) return NULL;
 	self->position = position;
+	self->velocity = vector2d(0, 0);
 	//Define shape
 	self->shape = shape_rect(0, 0, 10, 10);
 	//Define hitbox
@@ -69,6 +70,13 @@ void player_update(Entity *self){
 	self->frame += 0.1;
 	if (self->frame >= 16.0)self->frame = 0;
 	//call draw fucntion here
+	const Uint8 * keys;
+	keys = SDL_GetKeyboardState(NULL);
+	if (keys[SDL_SCANCODE_W]) self->position.y -= 1;
+	if (keys[SDL_SCANCODE_S]) self->position.y += 1;
+	if (keys[SDL_SCANCODE_D]) self->position.x -= 1;
+	if (keys[SDL_SCANCODE_A]) self->position.x += 1;
+	 
 	player_draw(self);
 }
 
