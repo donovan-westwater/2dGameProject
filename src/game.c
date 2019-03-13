@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "space.h"
 #include "Body.h"
+#include "player.h"
 
 int main(int argc, char * argv[])
 {
@@ -50,6 +51,7 @@ int main(int argc, char * argv[])
 		0.5); //was oringally 0.5
    
 	/*Starting entities*/
+	player_new(vector2d(600,600));
 	entity_new();
 	Entity *other = entity_new();
 	other->position = vector2d(100,150);
@@ -57,7 +59,8 @@ int main(int argc, char * argv[])
 	//other->hitbox.position = other->position;
 	//other->hitbox.velocity = other->velocity;
 	adding_all_bodies_to_space(space);
-	Shape wall = shape_rect(500,200,100,50);
+	//Playing around with static shapes to figure out how to level
+	Shape wall = shape_rect(500,200,100,50); 
 	space_add_static_shape(space, wall);
 	/*main game loop*/
     while(!done)
