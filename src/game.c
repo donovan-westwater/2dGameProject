@@ -6,6 +6,7 @@
 #include "space.h"
 #include "Body.h"
 #include "player.h"
+#include "level.h"
 
 int main(int argc, char * argv[])
 {
@@ -22,6 +23,7 @@ int main(int argc, char * argv[])
     Vector4D mouseColor = {255,100,255,200};
 	//For basic collision, create a space variable here (Keep in mind it is going to get merged into the level system later!)
 	Space *space;
+	LevelInfo *linfo = NULL;
     
     /*program initializtion*/
     init_logger("gf2d.log");
@@ -50,18 +52,24 @@ int main(int argc, char * argv[])
 		0.0,
 		0.5); //was oringally 0.5
    
-	/*Starting entities*/
+	/*Starting entities*/ //Put all of this in the level file
+	
+	linfo = level_info_load("levels/section1.txt");  //ERROR HERE
+	if (linfo != NULL){
+		level_init(linfo, space);
+	}
 	player_new(vector2d(600,600));
-	entity_new();
-	Entity *other = entity_new();
-	other->position = vector2d(100,150);
-	other->velocity = vector2d(1, -1);
+	//entity_new();
+	//Entity *other = entity_new();
+	//other->position = vector2d(100,150);
+	//other->velocity = vector2d(1, -1);
 	//other->hitbox.position = other->position;
 	//other->hitbox.velocity = other->velocity;
 	adding_all_bodies_to_space(space);
 	//Playing around with static shapes to figure out how to level
-	Shape wall = shape_rect(500,200,100,50); 
-	space_add_static_shape(space, wall);
+	//Shape wall = shape_rect(500,200,100,50); 
+	//space_add_static_shape(space, wall);
+
 	/*main game loop*/
     while(!done)
     {
@@ -79,15 +87,16 @@ int main(int argc, char * argv[])
            gf2d_sprite_draw_image(sprite,vector2d(0,0));
 		   
 		   entity_think_all();
-			//Physics update
+			//Physics update (put into level update)
 		   entity_pre_sync_all();
 		   space_update(space);
 		   entity_post_sync_all();
 
-		   //Entity drawn
+		   //Entites drawn and thinks called
 			entity_update_all(); 
+
             //UI elements last
-			space_draw(space, vector2d(0, 0));
+			space_draw(space, vector2d(0, 0)); 
             gf2d_sprite_draw(
                 mouse,
                 vector2d(mx,my),

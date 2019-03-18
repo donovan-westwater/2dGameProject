@@ -1,0 +1,2 @@
+# [Entity/static shape] [postion vector] [length/width for static shapes]
+wall |800,100| 20,10|

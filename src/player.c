@@ -74,8 +74,8 @@ void player_update(Entity *self){
 	keys = SDL_GetKeyboardState(NULL);
 	if (keys[SDL_SCANCODE_W]) self->position.y -= 1;
 	if (keys[SDL_SCANCODE_S]) self->position.y += 1;
-	if (keys[SDL_SCANCODE_D]) self->position.x -= 1;
-	if (keys[SDL_SCANCODE_A]) self->position.x += 1;
+	if (keys[SDL_SCANCODE_D]) self->position.x += 1;
+	if (keys[SDL_SCANCODE_A]) self->position.x -= 1;
 	 
 	player_draw(self);
 }
