@@ -55,8 +55,11 @@ int main(int argc, char * argv[])
 	/*Starting entities*/ //Put all of this in the level file
 	
 	linfo = level_info_load("levels/section1.txt");  //ERROR HERE
+	//Vector2D* check = (Vector2D *)list_get_nth(linfo->shapeLocations, 0);
+	//slog("%lf",check.x);
 	if (linfo != NULL){
 		level_init(linfo, space);
+		//if(check =! NULL) slog("%lf", check->x);
 	}
 	player_new(vector2d(600,600));
 	//entity_new();
@@ -109,7 +112,7 @@ int main(int argc, char * argv[])
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
-        slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
+       // slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());  TURN BACK ON ONCE LEVEL LOADING IS FIXED
 		
     }
     slog("---==== END ====---");

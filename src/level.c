@@ -51,27 +51,33 @@ LevelInfo *level_info_load(char *filename){
 		if (c == '\n'){
 			
 			names = "";
+			numbers = "";
 			isWall = 0;
 			isMonster = 0;
 			isObsticle = 0;
 			skip = 0;
 			x = 0;
 			y = 0;
+			continue;
 		}
 		if (c == ' ' || skip) continue;
 		if (c == '|'){
 			
 			//First section: type of object
-			slog(names);
+			//slog(names);
+			//slog(numbers);
+			
 			if (!isMonster && !isWall && !isObsticle){
-				if (names == "monster"){
+				//slog("%d %d %d", !isMonster, !isWall, !isObsticle);
+				//slog("%s%s", "wall", names);
+				if (strcmp(names, "monster") == 0){
 					isMonster = 1;
 					//NOTHING HAPPENS YET. SHOULD BE EENTUALLY PLACED INTO THE SPAWN LIST!
 				}
-				else if (names == "wall"){
+				else if (strcmp(names,"wall") == 0){
 					isWall = 1;
 				}
-				else if(names == "obsticle"){
+				else if (strcmp(names, "obsticle") == 0){
 					isObsticle = 1;
 					//NOTHING HAPPENS YET. SHOULD BE EVENTUALLY PLACED INTO SPAWN LIST!
 				}
@@ -79,8 +85,10 @@ LevelInfo *level_info_load(char *filename){
 			//Second section: location of objects
 			else 
 			{
+				slog("HERE");
 				//Currently only puts in wall locations. Add in monsters and obstcles once they are created
 				if (strlen(numbers) > 0){
+					
 					y = atof(numbers);
 					Vector2D s = vector2d(x, y);
 					Vector2D *data = &s;
@@ -105,7 +113,7 @@ LevelInfo *level_info_load(char *filename){
 		}
 		else
 		{ 
-			slog(" HERE ");
+			//slog(" HERE ");
 			
 			//Part of First section
 			if (!isMonster && !isWall && !isObsticle && !(isdigit(c) || ispunct(c))){
@@ -128,7 +136,7 @@ LevelInfo *level_info_load(char *filename){
 			//	numbers = temp;
 				char *temp;
 				char stor[2];
-				stor[0] = tolower(c);
+				stor[0] = c;
 				stor[1] = '\0';
 				temp = malloc(sizeof(numbers));
 				strcpy(temp, numbers);
@@ -136,6 +144,7 @@ LevelInfo *level_info_load(char *filename){
 				numbers = (char *)realloc(numbers, sizeof(numbers) + 2);
 				strcpy(numbers, temp);
 				strcat(numbers, stor);
+				//slog(numbers);
 			}
 			else if (c == ','){
 				x = atof(numbers);
@@ -159,6 +168,8 @@ void level_init(LevelInfo *linfo, Uint8 space){
 	for (int x = 0; x <  list_get_count(linfo->shapeLocations); x++){
 		Vector2D *loc = (Vector2D*) list_get_nth(linfo->shapeLocations, x);
 		Vector2D *param = (Vector2D*)list_get_nth(linfo->shapeParams, x);
+		slog("%lf",loc->x);
+		slog("%lf",param->x);
 		Shape wall = shape_rect(loc->x,loc->y,param->x,param->y);
 		space_add_static_shape(space, wall);
 	}
