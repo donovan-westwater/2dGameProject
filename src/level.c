@@ -85,14 +85,27 @@ LevelInfo *level_info_load(char *filename){
 			//Second section: location of objects
 			else 
 			{
-				slog("HERE");
+				
 				//Currently only puts in wall locations. Add in monsters and obstcles once they are created
-				if (strlen(numbers) > 0){
-					
+				if (strlen(numbers) > 0 && !paramMode){
 					y = atof(numbers);
-					Vector2D s = vector2d(x, y);
-					Vector2D *data = &s;
-					list_append(out->shapeLocations, (void*)data);
+					//Vector2D s = vector2d(x, y); //Malloc vecoter to keep outside stack
+					Vector2D *s;
+					s = malloc(sizeof(Vector2D));
+					s->x = x;
+					s->y = y;
+					void *data = s;
+					//check = (Vector2D *)data;
+					slog("%lf %lf", s->x, s->y);
+
+					if (out->shapeLocations == NULL) { 
+						out->shapeLocations = list_new();
+						slog("List allocated");
+					}
+					slog(" Trying to appending data");
+					out->shapeLocations = list_append(out->shapeLocations, data);
+					//check =(Vector2D *) list_get_nth(out->shapeLocations, 0); //Checking if its in list
+					//slog("%lf %lf", check->x, check->y);                      //DOESNT PRINT
 					x = 0;
 					y = 0;
 					numbers = "";
@@ -101,9 +114,17 @@ LevelInfo *level_info_load(char *filename){
 			//Final Section: Params for each object Only has params for walls so far
 				if (paramMode && strlen(numbers) > 0){
 					y = atof(numbers);
-					Vector2D s = vector2d(x, y);
-					Vector2D *data = &s;
-					list_append(out->shapeParams, (void*)data);
+					Vector2D *s;
+					s = malloc(sizeof(Vector2D));
+					s->x = x;
+					s->y = y;
+					void *data = s;
+					if (out->shapeParams == NULL){
+						out->shapeParams = list_new();
+						slog("List allocated");
+					}
+					slog(" Trying to appending data");
+					list_append(out->shapeParams, data);
 					x = 0;
 					y = 0;
 					numbers = "";
@@ -131,7 +152,7 @@ LevelInfo *level_info_load(char *filename){
 				strcat(names, stor);
 			}
 			//Part of second section
-			else if (isdigit(c) || c == '\.'){
+			else if (isdigit(c) || c == '.'){
 			//	temp = *numbers + tolower(c);
 			//	numbers = temp;
 				char *temp;
@@ -148,6 +169,7 @@ LevelInfo *level_info_load(char *filename){
 			}
 			else if (c == ','){
 				x = atof(numbers);
+				
 				numbers = "";
 			}
 
@@ -163,22 +185,46 @@ void level_init(LevelInfo *linfo, Uint8 space){
 		return;
 	}
 	level_clear();
-	if (space) gamelevel.space = &space;
+	slog("trying to add space!");
+	if (space) create_space();
 	//Should load up infomation from LevelInfo here! (SHOULD CHECK IF PARAMS AND LOC ARE THE SAME AMOUNT)
-	for (int x = 0; x <  list_get_count(linfo->shapeLocations); x++){
-		Vector2D *loc = (Vector2D*) list_get_nth(linfo->shapeLocations, x);
-		Vector2D *param = (Vector2D*)list_get_nth(linfo->shapeParams, x);
-		slog("%lf",loc->x);
-		slog("%lf",param->x);
-		Shape wall = shape_rect(loc->x,loc->y,param->x,param->y);
-		space_add_static_shape(space, wall);
+	for (int i = 0; i <  list_get_count(linfo->shapeLocations); i++){
+		slog("Size: %d", list_get_count(linfo->shapeLocations));
+		slog("Size: %d", list_get_count(linfo->shapeParams));
+		Vector2D *loc = (Vector2D *) list_get_nth(linfo->shapeLocations, i);
+		Vector2D *param = (Vector2D *) list_get_nth(linfo->shapeParams, i);
+		//slog("%lf",loc->x);
+		//slog("%lf",param->x);
+		if (loc != NULL && param != NULL){
+			slog("%lf", loc->x);
+			slog("%lf", param->x);
+			Shape wall = shape_rect(loc->x,loc->y,param->x,param->y);
+			space_add_static_shape(gamelevel.space, wall);
+			//Have fucntions here to tie shape to a static entity to represent the wall
+		}
 	}
+	//free data here
+}
+void create_space(){
+	gamelevel.space = space_new_full(
+		1,
+		shape_rect(0, 0, 2400, 1440).s.r,
+		0.1,
+		vector2d(0, 0),
+		0.0,
+		0.5);
 
 }
 void level_clear(){
 	space_free(gamelevel.space);
 	memset(&gamelevel, 0, sizeof(Level));
 }
-
+Space* level_get_space(){
+	return gamelevel.space;
+}
 void level_draw();
-void level_update();
+void level_update(){
+	entity_pre_sync_all();
+	space_update(gamelevel.space);
+	entity_post_sync_all();
+}
