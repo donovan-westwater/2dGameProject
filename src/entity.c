@@ -104,8 +104,8 @@ void entity_update(Entity *ent){
 	ent->frame += 0.1;
 	if (ent->frame >= 16.0)ent->frame = 0;
 	//ent->position.x += 0.5;
-	slog("postion of x: %lf    hitbox postion of x: %lf", ent->position.x,ent->hitbox.position.x);
-	slog("Velocity of x: %lf    hitbox velocity of x: %lf", ent->velocity.x, ent->hitbox.velocity.x);
+	//slog("postion of x: %lf    hitbox postion of x: %lf", ent->position.x,ent->hitbox.position.x);
+	//slog("Velocity of x: %lf    hitbox velocity of x: %lf", ent->velocity.x, ent->hitbox.velocity.x);
 	//if (ent->position.x >= 100)ent->position.x = -ent->position.x;
 
 	ent->position.x += ent->velocity.x;
