@@ -6,6 +6,7 @@
 #include "space.h"
 #include "Body.h"
 #include "player.h"
+#include "camera.h"
 #include "level.h"
 
 int main(int argc, char * argv[])
@@ -39,6 +40,9 @@ int main(int argc, char * argv[])
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
 	entity_system_init(16);
+
+	camera_set_dimensions(0, 0, 1200, 700);
+	camera_set_bounds(0, 0,2400, 1400);
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
@@ -54,7 +58,7 @@ int main(int argc, char * argv[])
    
 	/*Starting entities*/ //Put all of this in the level file
 	player_new(vector2d(600, 600));
-	linfo = level_info_load("levels/section1.txt");  //ERROR HERE
+	linfo = level_info_load("levels/section1.txt");  
 	//Vector2D* check = (Vector2D *)list_get_nth(linfo->shapeLocations, 0);
 	//slog("%lf",check.x);
 	if (linfo != NULL){
@@ -63,11 +67,11 @@ int main(int argc, char * argv[])
 	}
 	
 	//entity_new();
-	//Entity *other = entity_new();
-	//other->position = vector2d(100,150);
-	//other->velocity = vector2d(1, -1);
-	//other->hitbox.position = other->position;
-	//other->hitbox.velocity = other->velocity;
+	Entity *other = entity_new();
+	other->position = vector2d(100,150);
+	other->velocity = vector2d(1, -1);
+	other->hitbox.position = other->position;
+	other->hitbox.velocity = other->velocity;
 	adding_all_bodies_to_space(level_get_space());
 	//Playing around with static shapes to figure out how to level
 	//Shape wall = shape_rect(500,200,100,50); 
@@ -99,7 +103,8 @@ int main(int argc, char * argv[])
 			entity_update_all(); 
 
             //UI elements last
-			space_draw(level_get_space(), vector2d(0, 0)); 
+			//space_draw(level_get_space(), vector2d(0, 0)); //put into level draw
+			level_draw();
             gf2d_sprite_draw(
                 mouse,
                 vector2d(mx,my),
@@ -112,9 +117,10 @@ int main(int argc, char * argv[])
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
-       // slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());  TURN BACK ON ONCE LEVEL LOADING IS FIXED
+       slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second()); // TURN BACK ON ONCE LEVEL LOADING IS FIXED
 		
     }
+	free(linfo);
     slog("---==== END ====---");
     return 0;
 }

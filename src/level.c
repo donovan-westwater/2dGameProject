@@ -4,6 +4,8 @@
 #include <string.h>
 #include "level.h"
 #include "space.h"
+#include "camera.h"
+#include "player.h"
 #include "simple_logger.h"
 //Level info
 typedef struct{
@@ -202,6 +204,7 @@ void level_init(LevelInfo *linfo, Uint8 space){
 			space_add_static_shape(gamelevel.space, wall);
 			//Have fucntions here to tie shape to a static entity to represent the wall
 		}
+		//Monster and obstcle calls go here
 	}
 	//free data here
 }
@@ -222,7 +225,16 @@ void level_clear(){
 Space* level_get_space(){
 	return gamelevel.space;
 }
-void level_draw();
+void level_draw(){
+	Vector2D cam;
+	cam = camera_get_offset();
+	space_draw(gamelevel.space, cam);
+	//gf2d_sprite_draw_image(gamelevel.backgroundImage, cam);
+	//gf2d_sprite_draw_image(gamelevel.tileLayer, cam);
+	entity_draw_all(); 
+	//entity_draw(player_get());
+	//gf2d_particle_emitter_draw(gamelevel.pe, cam);
+}
 void level_update(){
 	entity_pre_sync_all();
 	space_update(gamelevel.space);

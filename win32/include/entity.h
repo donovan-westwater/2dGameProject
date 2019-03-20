@@ -119,8 +119,10 @@ void entity_pre_sync_all();
 *
 */
 void entity_post_sync_all();
-
-
+/**
+* @brief draws all entities in manager
+*/
+void entity_draw_all();
 
 
 

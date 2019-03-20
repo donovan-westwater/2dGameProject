@@ -24,6 +24,7 @@ Entity *player_get();
 */
 void player_set_position(Vector2D position);
 
+void player_draw(Entity* self);
 
 //Add player spawn later
 

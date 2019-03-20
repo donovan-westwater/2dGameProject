@@ -1,0 +1,3 @@
+Have a small set of files dedicated to creating the overworld map
+Then create a series of "route" files which determine the next route
+the player is making

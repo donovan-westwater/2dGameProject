@@ -2,7 +2,7 @@
 #include "simple_logger.h"
 #include "gf2d_draw.h"
 #include "space.h"
-
+#include "camera.h"
 
 //the code sample we made above
 //A bunch of this code comes from dj's project. This is to give me a start and help me understand systems
@@ -69,10 +69,17 @@ Entity *entity_new(){
 }
 
 void entity_draw(Entity *self){
+
+	Vector2D drawPosition;
+	if (!self)return;
+	if (!self->_inuse)return;
+
+	vector2d_add(drawPosition, self->position, camera_get_offset());
+
 	if (!self) return;
 	gf2d_sprite_draw(
 		self->sprite,
-		self->position,
+		drawPosition,
 		&self->scale,
 		NULL,
 		NULL,
@@ -106,7 +113,7 @@ void entity_update(Entity *ent){
 	//Updates hitbox to new postion
 	//vector2d_copy(ent->position, ent->hitbox.position);
 	//vector2d_copy(ent->velocity, ent->hitbox.velocity);
-	entity_draw(ent);
+	//entity_draw(ent);
 	//Body *draw = &ent->hitbox;
 	//body_draw(draw,vector2d(0,0));
 	
@@ -150,7 +157,15 @@ void adding_all_bodies_to_space(Space* space){
 	}
 }
 
+void entity_draw_all(){
+	int i;
+	for (i = 0; i < entityManager.maxEntities; i++)
+	{
+		if (entityManager.entityList[i]._inuse == 0)continue;
+		entity_draw(&entityManager.entityList[i]);
+	}
 
+}
 void entity_pre_sync_body(Entity *self)
 {
 	if (!self)return;// nothin to do

@@ -1,6 +1,8 @@
 #include "player.h"
+#include "gf2d_sprite.h"
 #include "gf2d_draw.h"
 #include "simple_logger.h"
+#include "camera.h"
 //ask about how to add control over player (ask Natlile or Omar)
 static Entity *_player = NULL;  //represents the player
 
@@ -22,6 +24,8 @@ Entity *player_new(Vector2D position){
 	if (!self) return NULL;
 	self->position = position;
 	self->velocity = vector2d(0, 0);
+	self->sprite = gf2d_sprite_load_image("images/motorcycle_blue.png");
+	
 	//Define shape
 	self->shape = shape_rect(0, 0, 10, 10);
 	//Define hitbox
@@ -40,8 +44,8 @@ Entity *player_new(Vector2D position){
 		self,
 		NULL);
 	//Define postion, scale and rotation (Opt, meant to overide existing values in entity)
-	self->scale = vector2d(50, 50);
-	self->shape = shape_rect(-self->scale.x / 2, -self->scale.y, self->scale.x, self->scale.y*2);
+	self->scale = vector2d(1, 1);
+	self->shape = shape_rect(0, 0, 44, 100);
 	//Assign function pointers
 	self->update = player_update;
 	//Assign entity to _player to finalize player
@@ -52,7 +56,7 @@ Entity *player_new(Vector2D position){
 Entity *player_get(){
 	return _player;
 }
-
+//test fucntion Dont use
 void player_draw(Entity *self){
 	double scalex = 5;
 	double scaley = 10;
@@ -67,6 +71,7 @@ void player_draw(Entity *self){
 }
 
 void player_update(Entity *self){
+	Vector2D cameraPos = { 0, 0 };
 	self->frame += 0.1;
 	if (self->frame >= 16.0)self->frame = 0;
 	//call draw fucntion here
@@ -76,8 +81,19 @@ void player_update(Entity *self){
 	if (keys[SDL_SCANCODE_S]) self->position.y += 1;
 	if (keys[SDL_SCANCODE_D]) self->position.x += 1;
 	if (keys[SDL_SCANCODE_A]) self->position.x -= 1;
-	 
-	player_draw(self);
+
+	if (keys[SDL_SCANCODE_UP]) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y - 1));
+	if (keys[SDL_SCANCODE_DOWN]) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y + 1));
+	if (keys[SDL_SCANCODE_LEFT]) camera_set_position(vector2d(camera_get_position().x - 1, camera_get_position().y));
+	if (keys[SDL_SCANCODE_RIGHT]) camera_set_position(vector2d(camera_get_position().x + 1, camera_get_position().y));
+
+	//camera_set_position(cameraPos);
+	//camera_set_position(vector2d(10,10));
+	if (self->position.x > (camera_get_position().x + camera_get_dimensions().w) || self->position.y > (camera_get_position().y + camera_get_dimensions().h)){
+		//camera_set_position(self->position);
+	}
+
+	//player_draw(self);
 }
 
 void player_set_position(Vector2D position)
