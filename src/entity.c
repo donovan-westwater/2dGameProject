@@ -65,6 +65,7 @@ Entity *entity_new(){
 			entityManager.entityList[i]._inuse = 1;
 			entityManager.entityList[i].frame = 0;
 			entityManager.entityList[i].update = entity_update;
+			entityManager.entityList[i].touch = entity_touch;
 			return &entityManager.entityList[i];
 		}
 	}
@@ -207,4 +208,6 @@ void entity_post_sync_all()
         entity_post_sync_body(&entityManager.entityList[i]);
     }
 }
-
+void entity_touch(Entity *self, Entity *other){
+	slog("THE BUG HAS TOUCHED!");
+}

@@ -219,7 +219,7 @@ void create_space(){
 		0.1,
 		vector2d(0, 0),
 		0.0,
-		0.5);
+		1); //Oringallly 0.5
 
 }
 void level_clear(){
@@ -253,7 +253,7 @@ int body_body_touch(Body *self, List *collisionList)
 	if (!self)return 0;
 	if (!self->data) return 0;
 	selfEnt = (Entity*)self->data;
-	slog("TOUCHING!");
+	//slog("TOUCHING!");
 	if (!selfEnt->touch)return 0;
 	count = list_get_count(collisionList);
 	

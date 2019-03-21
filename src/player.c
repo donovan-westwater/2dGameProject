@@ -1,4 +1,5 @@
 #include "player.h"
+#include "level.h"
 #include "gf2d_sprite.h"
 #include "gf2d_draw.h"
 #include "simple_logger.h"
@@ -48,6 +49,8 @@ Entity *player_new(Vector2D position){
 	self->shape = shape_rect(0, 0, 44, 100);
 	//Assign function pointers
 	self->update = player_update;
+	self->touch = player_touch;
+	self->hitbox.touch = body_body_touch;
 	//Assign entity to _player to finalize player
 	_player = self;
 	//return self aka the player
@@ -77,10 +80,10 @@ void player_update(Entity *self){
 	//call draw fucntion here
 	const Uint8 * keys;
 	keys = SDL_GetKeyboardState(NULL);
-	if (keys[SDL_SCANCODE_W]) self->position.y -= 1;
-	if (keys[SDL_SCANCODE_S]) self->position.y += 1;
-	if (keys[SDL_SCANCODE_D]) self->position.x += 1;
-	if (keys[SDL_SCANCODE_A]) self->position.x -= 1;
+	if (keys[SDL_SCANCODE_W]) self->position.y -= 2;
+	if (keys[SDL_SCANCODE_S]) self->position.y += 2;
+	if (keys[SDL_SCANCODE_D]) self->position.x += 2;
+	if (keys[SDL_SCANCODE_A]) self->position.x -= 2;
 
 	if (keys[SDL_SCANCODE_UP]) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y - 1));
 	if (keys[SDL_SCANCODE_DOWN]) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y + 1));
@@ -111,4 +114,8 @@ void player_set_position(Vector2D position)
 	}
 	vector2d_copy(_player->position, position);
 	vector2d_copy(_player->hitbox.position, position);
+}
+int player_touch(Entity *self, Entity *other){
+	slog(" is touching ");
+	return 1;
 }

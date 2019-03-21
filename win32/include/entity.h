@@ -125,5 +125,5 @@ void entity_post_sync_all();
 void entity_draw_all();
 
 
-
+void entity_touch(Entity *self, Entity *other);
 #endif
