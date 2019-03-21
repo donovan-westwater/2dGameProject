@@ -26,7 +26,7 @@ Entity *monster_spawn(Vector2D location,MonsterType type){
 		0,
 		&self->shape,
 		self,
-		NULL);
+		body_body_touch);
 	//set functions to function pointers here
 	switch (type)
 	{
@@ -52,7 +52,14 @@ void monster_update(Entity *ent){
 
 }
 void shooter_think(Entity *ent){
-	slog("IM A SHOOTER");
+	//slog("IM A SHOOTER");
+	Entity *sprite;
+	ent->velocity = vector2d(0, 0);
+	if (ent->timer % 100 == 0){
+		sprite = entity_projectile(ent, vector2d(0, -1));
+		sprite->sprite = gf2d_sprite_load_all("images/Fireball.png", 32, 32, 16);
+	}
+
 }
 void patroller_think(Entity *ent){
 	//slog("IM A PATROLLER");

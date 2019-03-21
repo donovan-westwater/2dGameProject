@@ -127,4 +127,17 @@ void entity_draw_all();
 
 
 void entity_touch(Entity *self, Entity *other);
+
+/**
+* @brief Fires a projectile from entity
+* @param the entity to fire from/ the entity who fires the projectile
+*/
+Entity *entity_projectile(Entity *self, Vector2D dir);
+/**
+* @brief Calls when a projectile hits another entity
+* @param Passes in itself and the other object its colliding with
+*/
+void projectile_touch(Entity *self, Entity *other);
+
+void projectile_update(Entity *self);
 #endif

@@ -62,6 +62,7 @@ Entity *entity_new(){
 			entityManager.entityList[i].hitbox.position = vector2d(110, 500);
 			entityManager.entityList[i].hitbox.shape = &entityManager.entityList[i].shape;
 			entityManager.entityList[i].hitbox.data = &entityManager.entityList[i];
+			entityManager.entityList[i].hitbox.touch = body_body_touch;
 			entityManager.entityList[i]._inuse = 1;
 			entityManager.entityList[i].frame = 0;
 			entityManager.entityList[i].timer = 0;
@@ -94,12 +95,13 @@ void entity_draw(Entity *self){
 	//slog("IM DRAWN!!!");
 }
 void entity_free(Entity *self){
-	if (!self){
+	if (self->_inuse != 0) self->_inuse = 0;
+	if (!self)return;
+	if (!level_get_space())
+	{//nothing to do
 		return;
 	}
-	if (self->free){
-		self->free(self);
-	}
+	space_remove_body(level_get_space(), &self->hitbox);
 	memset(self, 0, sizeof(Entity));
 
 
@@ -171,7 +173,7 @@ void adding_all_bodies_to_space(Space* space){
 			entityManager.entityList[i].hitbox.worldclip = 1;
 			entityManager.entityList[i].hitbox.elasticity = 100;
 			entityManager.entityList[i].hitbox.mass = 10;
-			entityManager.entityList[i].hitbox.touch = body_body_touch;
+			//entityManager.entityList[i].hitbox.touch = body_body_touch;
 			space_add_body(space,&entityManager.entityList[i].hitbox);
 		}
 	}
@@ -222,3 +224,69 @@ void entity_post_sync_all()
 void entity_touch(Entity *self, Entity *other){
 	slog("THE BUG HAS TOUCHED!");
 }
+Entity *entity_projectile(Entity *self,Vector2D dir){
+	Entity* projectile = entity_new();
+	projectile->health = 100;
+	projectile->position = self->position;
+	projectile->velocity = dir;
+	if (!self)return;
+	int playerclip = 0;
+	if (strcmp(self->hitbox.name, "player") != 0) playerclip = 1;
+	projectile->shape = shape_rect(0, 0, 32, 32);
+	body_set(
+		&projectile->hitbox,
+		"projectile",
+		1,//world layer
+		playerclip,
+		1,
+		self->hitbox.team,
+		self->position,
+		dir,
+		10,
+		1,
+		0,
+		&projectile->shape,
+		projectile,
+		self->hitbox.touch);
+	projectile->touch = projectile_touch;
+	projectile->update = projectile_update;
+	space_add_body(level_get_space(), &projectile->hitbox);
+	return projectile;
+
+}
+
+void projectile_touch(Entity *self, Entity *other){
+	slog(" I DID A HIT! ");
+	//add free fucntion here
+
+	self->_inuse = 0;
+	entity_free(self);
+}
+
+void projectile_update(Entity *self){
+	self->frame += 0.1;
+	
+	if (self->frame >= 16.0){
+		self->frame = 0;
+	}
+
+	
+	self->position.x += self->velocity.x;
+	self->position.y += self->velocity.y;
+	self->health--;
+	if (self->health <= 0){
+		self->_inuse = 0;
+		entity_free(self);
+		//Look up how DJ frees entities
+	}
+}
+/*
+void entity_free(Entity *self){
+	if (!self)return;
+	if (!level_get_space())
+	{//nothing to do
+		return;
+	}
+	space_remove_body(level_get_space(), &self->hitbox);
+}
+*/

@@ -69,7 +69,7 @@ int main(int argc, char * argv[])
 	
 	//entity_new();
 	//Entity *out = monster_spawn(vector2d(100, 150), SHOOTER);
-	Entity *crash = monster_spawn(vector2d(100, 200), CHASER);
+	Entity *crash = monster_spawn(vector2d(100, 200), SHOOTER);
 	crash->velocity = vector2d(0, 0);
 	//Entity *other = entity_new();
 	//other->position = vector2d(100,200);
