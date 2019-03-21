@@ -2,8 +2,9 @@
 #include "simple_logger.h"
 #include "gf2d_draw.h"
 #include "space.h"
+#include "collisions.h"
 #include "camera.h"
-
+#include "level.h"
 //the code sample we made above
 //A bunch of this code comes from dj's project. This is to give me a start and help me understand systems
 //ADD THINK SYSTEM!
@@ -60,6 +61,7 @@ Entity *entity_new(){
 			entityManager.entityList[i].hitbox.velocity = vector2d(1, 1);
 			entityManager.entityList[i].hitbox.position = vector2d(110, 500);
 			entityManager.entityList[i].hitbox.shape = &entityManager.entityList[i].shape;
+			entityManager.entityList[i].hitbox.data = &entityManager.entityList[i];
 			entityManager.entityList[i]._inuse = 1;
 			entityManager.entityList[i].frame = 0;
 			entityManager.entityList[i].update = entity_update;
@@ -99,7 +101,9 @@ void entity_free(Entity *self){
 
 
 }
+void entity_think(Entity *self){
 
+}
 void entity_update(Entity *ent){
 	ent->frame += 0.1;
 	if (ent->frame >= 16.0)ent->frame = 0;
@@ -116,8 +120,8 @@ void entity_update(Entity *ent){
 	//entity_draw(ent);
 	//Body *draw = &ent->hitbox;
 	//body_draw(draw,vector2d(0,0));
-	
 	//put everything else here later
+
 }
 
 void entity_update_all(){
@@ -140,7 +144,10 @@ void entity_think_all(){
 				entityManager.entityList[i].think(&entityManager.entityList[i]);
 			}
 		}
-}/** @brief adds all existing entites' bodies to the space's list
+}
+
+
+/** @brief adds all existing entites' bodies to the space's list
  * @param the space to add the bodies
  * @Note: this is more of a test function. Once the map map is added, this should not be used
  */
@@ -152,6 +159,7 @@ void adding_all_bodies_to_space(Space* space){
 			entityManager.entityList[i].hitbox.worldclip = 1;
 			entityManager.entityList[i].hitbox.elasticity = 100;
 			entityManager.entityList[i].hitbox.mass = 10;
+			entityManager.entityList[i].hitbox.touch = body_body_touch;
 			space_add_body(space,&entityManager.entityList[i].hitbox);
 		}
 	}

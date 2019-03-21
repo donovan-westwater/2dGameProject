@@ -91,5 +91,5 @@ void create_space();
 */
 void level_transition(char *filename, const char *playerTarget, Uint32 targetId);
 
-
+int body_body_touch(Body *self, List *collisionList);
 #endif

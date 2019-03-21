@@ -7,6 +7,7 @@
 #include "Body.h"
 #include "player.h"
 #include "camera.h"
+#include "monster.h"
 #include "level.h"
 
 int main(int argc, char * argv[])
@@ -57,7 +58,7 @@ int main(int argc, char * argv[])
 		0.5); //was oringally 0.5
    
 	/*Starting entities*/ //Put all of this in the level file
-	player_new(vector2d(600, 600));
+	player_new(vector2d(900, 600));
 	linfo = level_info_load("levels/section1.txt");  
 	//Vector2D* check = (Vector2D *)list_get_nth(linfo->shapeLocations, 0);
 	//slog("%lf",check.x);
@@ -67,6 +68,7 @@ int main(int argc, char * argv[])
 	}
 	
 	//entity_new();
+	
 	Entity *other = entity_new();
 	other->position = vector2d(100,150);
 	other->velocity = vector2d(1, -1);

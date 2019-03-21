@@ -89,7 +89,7 @@ void player_update(Entity *self){
 
 	//camera_set_position(cameraPos);
 	//camera_set_position(vector2d(10,10));
-	slog("%lf %lf", self->position.x, self->position.y);
+	//slog("%lf %lf", self->position.x, self->position.y);
 	//This is camera tracking. To make more accurate, seperate the conditions so that all directions have their own check
 	if (self->position.x > (camera_get_position().x + camera_get_dimensions().w) || self->position.y > (camera_get_position().y + camera_get_dimensions().h)){
 		camera_set_position(self->position);

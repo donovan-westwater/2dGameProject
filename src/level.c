@@ -6,6 +6,8 @@
 #include "space.h"
 #include "camera.h"
 #include "player.h"
+#include "monster.h"
+#include "collisions.h"
 #include "simple_logger.h"
 //Level info
 typedef struct{
@@ -181,6 +183,8 @@ LevelInfo *level_info_load(char *filename){
 	return out;
 	
 }
+//Create a fucntion to load in the places to deliever mail
+
 void level_init(LevelInfo *linfo, Uint8 space){
 	if (!linfo)
 	{
@@ -239,4 +243,27 @@ void level_update(){
 	entity_pre_sync_all();
 	space_update(gamelevel.space);
 	entity_post_sync_all();
+}
+//Add proper documentation later calls all touch fucntions in collisionList
+int body_body_touch(Body *self, List *collisionList)
+{
+	Entity *selfEnt;
+	Collision *c;
+	int i, count;
+	if (!self)return 0;
+	if (!self->data) return 0;
+	selfEnt = (Entity*)self->data;
+	slog("TOUCHING!");
+	if (!selfEnt->touch)return 0;
+	count = list_get_count(collisionList);
+	
+	for (i = 0; i < count; i++)
+	{
+		c = (Collision *)list_get_nth(collisionList, i);
+		if (!c)continue;
+		if (!c->body)continue;
+		if (!c->body->data)continue;
+		selfEnt->touch(selfEnt, (Entity*)c->body->data);
+	}
+	return 0;
 }
