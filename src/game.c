@@ -68,12 +68,14 @@ int main(int argc, char * argv[])
 	}
 	
 	//entity_new();
-	
-	Entity *other = entity_new();
-	other->position = vector2d(100,150);
-	other->velocity = vector2d(1, -1);
-	other->hitbox.position = other->position;
-	other->hitbox.velocity = other->velocity;
+	//Entity *out = monster_spawn(vector2d(100, 150), SHOOTER);
+	Entity *crash = monster_spawn(vector2d(100, 200), CHASER);
+	crash->velocity = vector2d(0, 0);
+	//Entity *other = entity_new();
+	//other->position = vector2d(100,200);
+	//other->velocity = vector2d(0, -1);
+	//other->hitbox.position = other->position;
+	//other->hitbox.velocity = other->velocity;
 	adding_all_bodies_to_space(level_get_space());
 	//Playing around with static shapes to figure out how to level
 	//Shape wall = shape_rect(500,200,100,50); 

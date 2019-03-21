@@ -42,7 +42,8 @@ typedef struct Entity_S
 	void(*think)(struct Entity_S * self);
 	void(*free)(struct Entity_S *self);     /**<called when the entity is freed for any custom cleanup*/
 
-
+	float health;
+	int timer;
 }Entity;
 
 /*

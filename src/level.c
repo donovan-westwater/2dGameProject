@@ -219,7 +219,7 @@ void create_space(){
 		0.1,
 		vector2d(0, 0),
 		0.0,
-		1); //Oringallly 0.5
+		 1); //Oringallly 0.5
 
 }
 void level_clear(){

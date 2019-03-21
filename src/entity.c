@@ -64,6 +64,8 @@ Entity *entity_new(){
 			entityManager.entityList[i].hitbox.data = &entityManager.entityList[i];
 			entityManager.entityList[i]._inuse = 1;
 			entityManager.entityList[i].frame = 0;
+			entityManager.entityList[i].timer = 0;
+			entityManager.entityList[i].health = 10;
 			entityManager.entityList[i].update = entity_update;
 			entityManager.entityList[i].touch = entity_touch;
 			return &entityManager.entityList[i];
@@ -106,8 +108,14 @@ void entity_think(Entity *self){
 
 }
 void entity_update(Entity *ent){
+	//slog("%d", ent->frame);
 	ent->frame += 0.1;
-	if (ent->frame >= 16.0)ent->frame = 0;
+	ent->timer += 1;
+	if (ent->timer == 1000) ent->timer = 0;
+	if (ent->frame >= 16.0){
+		ent->frame = 0;
+	}
+	
 	//ent->position.x += 0.5;
 	//slog("postion of x: %lf    hitbox postion of x: %lf", ent->position.x,ent->hitbox.position.x);
 	//slog("Velocity of x: %lf    hitbox velocity of x: %lf", ent->velocity.x, ent->hitbox.velocity.x);
@@ -122,7 +130,10 @@ void entity_update(Entity *ent){
 	//Body *draw = &ent->hitbox;
 	//body_draw(draw,vector2d(0,0));
 	//put everything else here later
-
+	//ent->health--;
+	if (ent->health == 0){
+		//Look up how DJ frees entities
+	}
 }
 
 void entity_update_all(){
