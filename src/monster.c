@@ -2,6 +2,7 @@
 #include "level.h"
 #include "player.h"
 #include "simple_logger.h"
+#include "collisions.h"
 //WIP (Should return an entity) (MonsterType Determines what think fucntion is assigned!)
 Entity *monster_spawn(Vector2D location,MonsterType type){
 
@@ -15,7 +16,7 @@ Entity *monster_spawn(Vector2D location,MonsterType type){
 	body_set(
 		&self->hitbox,
 		"monster",
-		1,//world layer
+		PLAYER_LAYER,//world layer
 		0,
 		1,
 		1,

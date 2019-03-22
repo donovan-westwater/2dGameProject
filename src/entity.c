@@ -15,7 +15,12 @@ typedef struct EntityManager_S{
 }EntityManager;
 
 static EntityManager entityManager = { 0 };
-
+Entity *get_entityList(){
+	return entityManager.entityList;
+}
+Uint32 get_maxEntites(){
+	return entityManager.maxEntities;
+}
 void entity_system_init(Uint32 maxEntities){
 
 	if (!maxEntities){
@@ -167,7 +172,7 @@ void entity_think_all(){
  */
 void adding_all_bodies_to_space(Space* space){
 	for (int i = 0; i < entityManager.maxEntities; i++){
-		if (entityManager.entityList[i]._inuse == 1){
+		if (entityManager.entityList[i]._inuse == 1 && entityManager.entityList[i].hitbox.inactive == 0){
 			entityManager.entityList[i].hitbox.cliplayer = 1;
 			entityManager.entityList[i].hitbox.touchlayer = 1;
 			entityManager.entityList[i].hitbox.worldclip = 1;
@@ -234,9 +239,9 @@ Entity *entity_projectile(Entity *self,Vector2D dir){
 	body_set(
 		&projectile->hitbox,
 		"projectile",
-		1,//world layer
+		ALL_LAYERS,//world layer
 		1,
-		1,
+		1, //touch layer
 		self->hitbox.team,
 		self->position,
 		dir,

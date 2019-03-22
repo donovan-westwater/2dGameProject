@@ -4,6 +4,7 @@
 #include "gf2d_draw.h"
 #include "simple_logger.h"
 #include "camera.h"
+#include "collisions.h"
 //ask about how to add control over player (ask Natlile or Omar)
 static Entity *_player = NULL;  //represents the player
 
@@ -32,8 +33,8 @@ Entity *player_new(Vector2D position){
 	//Define hitbox
 	body_set(&self->hitbox,
 		"player",
-		1,
-		1,
+		PLAYER_LAYER,
+		1, //clip layer
 		1,
 		2,
 		position,

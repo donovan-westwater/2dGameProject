@@ -140,4 +140,8 @@ Entity *entity_projectile(Entity *self, Vector2D dir);
 void projectile_touch(Entity *self, Entity *other);
 
 void projectile_update(Entity *self);
+
+Entity *get_entityList();
+
+Uint32 get_maxEntites();
 #endif

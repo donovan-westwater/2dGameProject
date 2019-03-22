@@ -9,6 +9,7 @@
 #include "camera.h"
 #include "monster.h"
 #include "level.h"
+#include "delivery.h"
 
 int main(int argc, char * argv[])
 {
@@ -40,7 +41,7 @@ int main(int argc, char * argv[])
         0); //Window size is 1200 x 720
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
-	entity_system_init(16);
+	entity_system_init(32);
 
 	camera_set_dimensions(0, 0, 1200, 700);
 	camera_set_bounds(0, 0,2400, 1400);
@@ -69,7 +70,8 @@ int main(int argc, char * argv[])
 	
 	//entity_new();
 	//Entity *out = monster_spawn(vector2d(100, 150), SHOOTER);
-	Entity *crash = monster_spawn(vector2d(100, 200), SHOOTER);
+	Entity *crash = monster_spawn(vector2d(100, 600), SHOOTER);
+	Entity *delivery = delivery_spawn(vector2d(400,500));
 	crash->velocity = vector2d(0, 0);
 	//Entity *other = entity_new();
 	//other->position = vector2d(100,200);
