@@ -72,6 +72,9 @@
     <ClCompile Include="..\..\src\delivery.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\include\obsticle.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\gf2d_graphics.h">
@@ -132,6 +135,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\delivery.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\obsticle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

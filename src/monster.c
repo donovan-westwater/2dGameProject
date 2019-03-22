@@ -29,6 +29,7 @@ Entity *monster_spawn(Vector2D location,MonsterType type){
 		self,
 		body_body_touch);
 	//set functions to function pointers here
+	//Add monster touch to deal damage (look at entity_touch for help)
 	switch (type)
 	{
 	case PATROLLER:

@@ -9,6 +9,7 @@
 #include "camera.h"
 #include "monster.h"
 #include "level.h"
+#include "obsticle.h"
 #include "delivery.h"
 
 int main(int argc, char * argv[])
@@ -70,9 +71,12 @@ int main(int argc, char * argv[])
 	
 	//entity_new();
 	//Entity *out = monster_spawn(vector2d(100, 150), SHOOTER);
-	Entity *crash = monster_spawn(vector2d(100, 600), SHOOTER);
-	Entity *delivery = delivery_spawn(vector2d(400,500));
-	crash->velocity = vector2d(0, 0);
+	//Entity *crash = monster_spawn(vector2d(100, 600), SHOOTER);
+	Entity *sinkhole = obsticle_spawn(vector2d(200,200),FLINGER);
+	Entity *stockade = obsticle_spawn(vector2d(500, 500), BLOCK);
+	
+	//Entity *delivery = delivery_spawn(vector2d(400,500));
+	//crash->velocity = vector2d(0, 0);
 	//Entity *other = entity_new();
 	//other->position = vector2d(100,200);
 	//other->velocity = vector2d(0, -1);
