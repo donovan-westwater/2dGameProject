@@ -230,14 +230,12 @@ Entity *entity_projectile(Entity *self,Vector2D dir){
 	projectile->position = self->position;
 	projectile->velocity = dir;
 	if (!self)return;
-	int playerclip = 0;
-	if (strcmp(self->hitbox.name, "player") != 0) playerclip = 1;
 	projectile->shape = shape_rect(0, 0, 32, 32);
 	body_set(
 		&projectile->hitbox,
 		"projectile",
 		1,//world layer
-		playerclip,
+		1,
 		1,
 		self->hitbox.team,
 		self->position,

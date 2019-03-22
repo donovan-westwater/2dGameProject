@@ -16,8 +16,8 @@ Entity *monster_spawn(Vector2D location,MonsterType type){
 		&self->hitbox,
 		"monster",
 		1,//world layer
-		1,
 		0,
+		1,
 		1,
 		location,
 		vector2d(0, 0),

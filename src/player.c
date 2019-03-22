@@ -77,9 +77,13 @@ void player_update(Entity *self){
 	Vector2D cameraPos = { 0, 0 };
 	self->frame += 0.1;
 	if (self->frame >= 16.0)self->frame = 0;
+	self -> timer++;
 	//call draw fucntion here
 	const Uint8 * keys;
+	const Uint32 * mouse;
+	int mx, my;
 	keys = SDL_GetKeyboardState(NULL);
+	mouse = SDL_GetMouseState(&mx, &my);
 	if (keys[SDL_SCANCODE_W]) self->position.y -= 2;
 	if (keys[SDL_SCANCODE_S]) self->position.y += 2;
 	if (keys[SDL_SCANCODE_D]) self->position.x += 2;
@@ -89,6 +93,13 @@ void player_update(Entity *self){
 	if (keys[SDL_SCANCODE_DOWN]) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y + 1));
 	if (keys[SDL_SCANCODE_LEFT]) camera_set_position(vector2d(camera_get_position().x - 1, camera_get_position().y));
 	if (keys[SDL_SCANCODE_RIGHT]) camera_set_position(vector2d(camera_get_position().x + 1, camera_get_position().y));
+	if (keys[SDL_SCANCODE_SPACE] && self->timer % 40 == 0) {
+		double x = mx - self->position.x;
+		double y = my - self->position.y;
+		double mag = vector2d_magnitude(vector2d(x,y));
+		Vector2D dir = vector2d(x/mag,y/mag);
+		entity_projectile(self,dir);
+	}
 
 	//camera_set_position(cameraPos);
 	//camera_set_position(vector2d(10,10));
