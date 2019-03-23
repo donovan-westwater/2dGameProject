@@ -99,10 +99,14 @@ void player_update(Entity *self){
 	if (keys[SDL_SCANCODE_SPACE] && self->timer % 40 == 0) {
 		double x = mx - self->position.x;
 		double y = my - self->position.y;
-		slog("%d %d", mx, my);
+		//slog("%d %d", mx, my);
 		double mag = vector2d_magnitude(vector2d(x,y));
 		Vector2D dir = vector2d(x/mag,y/mag);
 		entity_projectile(self,dir);
+	}
+	if (keys[SDL_SCANCODE_O])
+	{
+		level_transition("levels/route2.txt",vector2d(900,600));
 	}
 
 	//camera_set_position(cameraPos);

@@ -5,6 +5,7 @@
 #include "collisions.h"
 #include "camera.h"
 #include "level.h"
+#include "player.h"
 //the code sample we made above
 //A bunch of this code comes from dj's project. This is to give me a start and help me understand systems
 //ADD THINK SYSTEM!
@@ -226,6 +227,15 @@ void entity_post_sync_all()
         entity_post_sync_body(&entityManager.entityList[i]);
     }
 }
+void entity_clear_all_but_player(){
+	int i;
+	for (i = 0; i < entityManager.maxEntities; i++)
+	{
+		if (entityManager.entityList[i]._inuse == 0 || &entityManager.entityList[i] == player_get())continue;
+		entity_free(&entityManager.entityList[i]);
+	}
+}
+
 void entity_touch(Entity *self, Entity *other){
 	slog("THE BUG HAS TOUCHED!");
 }

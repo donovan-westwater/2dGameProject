@@ -151,5 +151,8 @@
     <Text Include="..\..\levels\route2.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="..\..\saves\save.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -88,9 +88,9 @@ Space *level_get_space();
 void create_space();
 /**
 * @brief load up a new game level and move the player into it
-* @param name of the file, the player, and the id of the next level
+* @param name of the file (I.e name of a route)
 */
-void level_transition(char *filename, const char *playerTarget, Uint32 targetId);
+void level_transition(char *filename,Vector2D pos);
 /**
 * @brief the touch function of the hitbox of entites. Calls the touch functions of thouse that collided with it
 * @param the hitbox of the entity and its list of collisions

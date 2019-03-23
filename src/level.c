@@ -340,6 +340,13 @@ void route_load(char *name){
 	}
 	fclose(reader);
 }
+void save_game(){
+
+}
+
+void load_game(){
+
+}
 void level_init(LevelInfo *linfo, Uint8 space){
 	if (!linfo)
 	{
@@ -419,6 +426,25 @@ void level_update(){
 	entity_pre_sync_all();
 	space_update(gamelevel.space);
 	entity_post_sync_all();
+}
+
+
+void level_transition(char *filename, Vector2D pos){
+	Entity *player;
+	LevelInfo *linfo = NULL;
+
+
+	linfo = level_info_load("levels/section1.txt");
+	if (!linfo)return;
+
+	entity_clear_all_but_player();
+	level_init(linfo, 1);
+	route_load(filename);
+	
+	player_set_position(pos);
+
+
+
 }
 //Add proper documentation later calls all touch fucntions in collisionList
 int body_body_touch(Body *self, List *collisionList)

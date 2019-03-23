@@ -125,8 +125,13 @@ void entity_post_sync_all();
 */
 void entity_draw_all();
 
-
+/**
+* @brief called when enetity is near or made a collsion with another entitiy
+* @param the entity itself and the entity making contact
+*/
 void entity_touch(Entity *self, Entity *other);
+
+void entity_clear_all_but_player();
 
 /**
 * @brief Fires a projectile from entity
