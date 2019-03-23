@@ -66,6 +66,7 @@ int main(int argc, char * argv[])
 	//slog("%lf",check.x);
 	if (linfo != NULL){
 		level_init(linfo, 1);
+		route_load("levels/route1.txt");
 		//if(check =! NULL) slog("%lf", check->x);
 	}
 	

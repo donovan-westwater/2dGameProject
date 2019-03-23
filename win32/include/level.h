@@ -84,12 +84,21 @@ void level_make_space();
 void level_build_tile_space(LevelInfo *linfo);
 
 Space *level_get_space();
+
 void create_space();
 /**
 * @brief load up a new game level and move the player into it
-* @param
+* @param name of the file, the player, and the id of the next level
 */
 void level_transition(char *filename, const char *playerTarget, Uint32 targetId);
-
+/**
+* @brief the touch function of the hitbox of entites. Calls the touch functions of thouse that collided with it
+* @param the hitbox of the entity and its list of collisions
+*/
 int body_body_touch(Body *self, List *collisionList);
+/**
+* @brief Loads up a paper route for the game
+* @param name of the route
+*/
+void route_load(char *name);
 #endif

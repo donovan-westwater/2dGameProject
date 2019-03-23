@@ -126,6 +126,8 @@
     <ClInclude Include="space.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\..\levels\route1.txt" />
+    <Text Include="..\..\levels\route2.txt" />
     <Text Include="..\..\levels\section1.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

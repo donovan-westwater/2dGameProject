@@ -145,5 +145,11 @@
     <Text Include="..\..\levels\section1.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="..\..\levels\route1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="..\..\levels\route2.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

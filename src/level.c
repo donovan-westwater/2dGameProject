@@ -10,6 +10,7 @@
 #include "obsticle.h"
 #include "collisions.h"
 #include "simple_logger.h"
+#include "delivery.h"
 //Level info
 typedef struct{
 	Space *space;
@@ -274,11 +275,71 @@ LevelInfo *level_info_load(char *filename){
 			//Part of Final section: PLACEHOLDER, IN CASE PARAMS DIVERSIFY
 		}
 	}
+	fclose(reader);
 	return out;
 	
 }
-//Create a fucntion to load in the places to deliever mail
-
+//Create a fucntion to load in the places to deliever mail (call after level init)
+void route_load(char *name){
+	//uses same read in as level init but simpler
+	//create variables
+	slog(" OPENING FILE ");
+	FILE *reader = fopen(name, "r");
+	if (reader == NULL){
+		slog("ERROR!!!!");
+		return NULL;
+	}
+	slog(" File Opened! ");
+	char* numbers = "";
+	int skip = 0; // Skips a line
+	double x = 0;
+	double y = 0;
+	char c = 'N'; //A dummy char. Shouldnt acutally be N
+	while (c != EOF){
+		//read input and gather data
+		c = fgetc(reader);
+		//slog(c);
+		if (c == '#') skip = 1;
+		if (c == '\n'){
+			numbers = "";
+			skip = 0;
+			x = 0;
+			y = 0;
+			continue;
+		}
+		if (c == ' ') continue;
+		if (c == '|'){
+			//spawn the delivery points
+			y = atof(numbers);
+			delivery_spawn(vector2d(x, y));
+			x = 0;
+			y = 0;
+			numbers = "";
+		
+		}else{
+		if (isdigit(c) || c == '.'){
+			//	temp = *numbers + tolower(c);
+			//	numbers = temp;
+			char *temp;
+			char stor[2];
+			stor[0] = c;
+			stor[1] = '\0';
+			temp = malloc(sizeof(numbers));
+			strcpy(temp, numbers);
+			numbers = NULL;
+			numbers = (char *)realloc(numbers, sizeof(numbers) + 2);
+			strcpy(numbers, temp);
+			strcat(numbers, stor);
+			//slog(numbers);
+		}
+		else if (c == ','){
+			x = atof(numbers);
+			numbers = "";
+		}
+	  }
+	}
+	fclose(reader);
+}
 void level_init(LevelInfo *linfo, Uint8 space){
 	if (!linfo)
 	{
@@ -324,6 +385,7 @@ void level_init(LevelInfo *linfo, Uint8 space){
 			monster_spawn(*loc, CHASER);
 		}
 	}
+	//Intilize route from here (Remember this for save system)
 	//free data here
 }
 void create_space(){

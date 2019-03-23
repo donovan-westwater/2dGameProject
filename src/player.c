@@ -33,7 +33,7 @@ Entity *player_new(Vector2D position){
 	//Define hitbox
 	body_set(&self->hitbox,
 		"player",
-		PLAYER_LAYER,
+		1,
 		1, //clip layer
 		1,
 		2,
@@ -85,6 +85,8 @@ void player_update(Entity *self){
 	int mx, my;
 	keys = SDL_GetKeyboardState(NULL);
 	mouse = SDL_GetMouseState(&mx, &my);
+	mx += camera_get_position().x;
+	my += camera_get_position().y;
 	if (keys[SDL_SCANCODE_W]) self->position.y -= 2;
 	if (keys[SDL_SCANCODE_S]) self->position.y += 2;
 	if (keys[SDL_SCANCODE_D]) self->position.x += 2;
@@ -97,6 +99,7 @@ void player_update(Entity *self){
 	if (keys[SDL_SCANCODE_SPACE] && self->timer % 40 == 0) {
 		double x = mx - self->position.x;
 		double y = my - self->position.y;
+		slog("%d %d", mx, my);
 		double mag = vector2d_magnitude(vector2d(x,y));
 		Vector2D dir = vector2d(x/mag,y/mag);
 		entity_projectile(self,dir);
@@ -106,14 +109,18 @@ void player_update(Entity *self){
 	//camera_set_position(vector2d(10,10));
 	//slog("%lf %lf", self->position.x, self->position.y);
 	//This is camera tracking. To make more accurate, seperate the conditions so that all directions have their own check
-	if (self->position.x > (camera_get_position().x + camera_get_dimensions().w) || self->position.y > (camera_get_position().y + camera_get_dimensions().h)){
-		camera_set_position(self->position);
+	if (self->position.x > (camera_get_position().x + camera_get_dimensions().w)){
+		camera_move(vector2d(camera_get_dimensions().w,0));
 	}
-	if (self->position.x < (camera_get_position().x ) || self->position.y < (camera_get_position().y )){
-		Vector2D move = vector2d(self->position.x - camera_get_dimensions().w, self->position.y - camera_get_dimensions().h);
-		camera_set_position(move);
+	if (self->position.y > (camera_get_position().y + camera_get_dimensions().h)){
+		camera_move(vector2d(0,camera_get_dimensions().h));
 	}
-
+	if (self->position.x < (camera_get_position().x )){
+		camera_move(vector2d(-camera_get_dimensions().w, 0));
+	}
+	if (self->position.y < (camera_get_position().y)){
+		camera_move(vector2d(0, -camera_get_dimensions().h));
+	}
 	//player_draw(self);
 }
 
