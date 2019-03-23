@@ -71,7 +71,7 @@ void patroller_think(Entity *ent){
 	}
 }
 void chaser_think(Entity *ent){
-	slog("IM A CHASER");
+	//slog("IM A CHASER");
 	Vector2D chase;
 	double outX;
 	double outY;

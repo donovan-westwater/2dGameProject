@@ -72,8 +72,8 @@ int main(int argc, char * argv[])
 	//entity_new();
 	//Entity *out = monster_spawn(vector2d(100, 150), SHOOTER);
 	//Entity *crash = monster_spawn(vector2d(100, 600), SHOOTER);
-	Entity *sinkhole = obsticle_spawn(vector2d(200,200),FLINGER);
-	Entity *stockade = obsticle_spawn(vector2d(500, 500), BLOCK);
+	//Entity *sinkhole = obsticle_spawn(vector2d(200,200),FLINGER);
+	//Entity *stockade = obsticle_spawn(vector2d(500, 500), BLOCK);
 	
 	//Entity *delivery = delivery_spawn(vector2d(400,500));
 	//crash->velocity = vector2d(0, 0);
@@ -127,10 +127,11 @@ int main(int argc, char * argv[])
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
-      // slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second()); // TURN BACK ON ONCE LEVEL LOADING IS FIXED
+       //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second()); // TURN BACK ON ONCE LEVEL LOADING IS FIXED
 		
     }
 	free(linfo);
+	gf2d_entity_system_close();
     slog("---==== END ====---");
     return 0;
 }

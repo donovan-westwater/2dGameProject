@@ -1,3 +1,6 @@
 # [Entity/static shape] [postion vector] [length/width for static shapes]
 wall |1,1| 2000,20|
 wall |1,21| 20,2000|
+obsticle |20,300| flinger|
+obsticle |20,800| flinger|
+monster |200,300| chaser|

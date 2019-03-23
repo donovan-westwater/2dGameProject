@@ -7,6 +7,7 @@
 #include "camera.h"
 #include "player.h"
 #include "monster.h"
+#include "obsticle.h"
 #include "collisions.h"
 #include "simple_logger.h"
 //Level info
@@ -39,6 +40,7 @@ LevelInfo *level_info_load(char *filename){
 	slog(" File Opened! ");
 	char* names = "";
 	char* numbers = "";
+	char* other = "";
 	int paramMode = 0;
 	int isWall = 0;
 	int isMonster = 0;
@@ -56,6 +58,7 @@ LevelInfo *level_info_load(char *filename){
 			
 			names = "";
 			numbers = "";
+			other = "";
 			isWall = 0;
 			isMonster = 0;
 			isObsticle = 0;
@@ -91,7 +94,7 @@ LevelInfo *level_info_load(char *filename){
 			{
 				
 				//Currently only puts in wall locations. Add in monsters and obstcles once they are created
-				if (strlen(numbers) > 0 && !paramMode){
+				if (strlen(numbers) > 0 && isWall && !paramMode){
 					y = atof(numbers);
 					//Vector2D s = vector2d(x, y); //Malloc vecoter to keep outside stack
 					Vector2D *s;
@@ -116,7 +119,7 @@ LevelInfo *level_info_load(char *filename){
 					paramMode = 1;
 				}
 			//Final Section: Params for each object Only has params for walls so far
-				if (paramMode && strlen(numbers) > 0){
+				if (paramMode && strlen(numbers) > 0 && isWall){
 					y = atof(numbers);
 					Vector2D *s;
 					s = malloc(sizeof(Vector2D));
@@ -134,6 +137,85 @@ LevelInfo *level_info_load(char *filename){
 					numbers = "";
 					paramMode = 0;
 				}
+				if (strlen(numbers) > 0 && isMonster && !paramMode){
+					y = atof(numbers);
+					//Vector2D s = vector2d(x, y); //Malloc vecoter to keep outside stack
+					Vector2D *s;
+					s = malloc(sizeof(Vector2D));
+					s->x = x;
+					s->y = y;
+					void *data = s;
+					//check = (Vector2D *)data;
+					slog("%lf %lf", s->x, s->y);
+
+					if (out->spawnLocations == NULL) {
+						out->spawnLocations = list_new();
+						slog("List allocated");
+					}
+					slog(" Trying to appending data");
+					out->spawnLocations = list_append(out->spawnLocations, data);
+					//check =(Vector2D *) list_get_nth(out->shapeLocations, 0); //Checking if its in list
+					//slog("%lf %lf", check->x, check->y);                      //DOESNT PRINT
+					x = 0;
+					y = 0;
+					numbers = "";
+					paramMode = 1;
+				}
+				if (strlen(other) > 0 && isMonster && paramMode){
+					char * strStor = malloc(sizeof(other));
+					strStor = other;
+					void *data = strStor;
+					if (out->spawnList == NULL) {
+						out->spawnList = list_new();
+						slog("List allocated");
+					}
+					slog(" Trying to appending data");
+					out->spawnList = list_append(out->spawnList, data);
+					//check =(Vector2D *) list_get_nth(out->shapeLocations, 0); //Checking if its in list
+					//slog("%lf %lf", check->x, check->y);                      //DOESNT PRINT
+					other = "";
+					paramMode = 0;
+				}
+				if (strlen(numbers) > 0 && isObsticle && !paramMode){
+					y = atof(numbers);
+					//Vector2D s = vector2d(x, y); //Malloc vecoter to keep outside stack
+					Vector2D *s;
+					s = malloc(sizeof(Vector2D));
+					s->x = x;
+					s->y = y;
+					void *data = s;
+					//check = (Vector2D *)data;
+					slog("%lf %lf", s->x, s->y);
+
+					if (out->spawnLocations == NULL) {
+						out->spawnLocations = list_new();
+						slog("List allocated");
+					}
+					slog(" Trying to appending data");
+					out->spawnLocations = list_append(out->spawnLocations, data);
+					//check =(Vector2D *) list_get_nth(out->shapeLocations, 0); //Checking if its in list
+					//slog("%lf %lf", check->x, check->y);                      //DOESNT PRINT
+					x = 0;
+					y = 0;
+					numbers = "";
+					paramMode = 1;
+				}
+				if (strlen(other) > 0 && isObsticle && paramMode){
+					char * strStor = malloc(sizeof(other));
+					strStor = other;
+					void *data = strStor;
+					if (out->spawnList == NULL) {
+						out->spawnList = list_new();
+						slog("List allocated");
+					}
+					slog(" Trying to appending data");
+					out->spawnList = list_append(out->spawnList, data);
+					//check =(Vector2D *) list_get_nth(out->shapeLocations, 0); //Checking if its in list
+					//slog("%lf %lf", check->x, check->y);                      //DOESNT PRINT
+					other = "";
+					paramMode = 0;
+				}
+
 			}
 		}
 		else
@@ -176,6 +258,18 @@ LevelInfo *level_info_load(char *filename){
 				
 				numbers = "";
 			}
+			else if (isalpha(c)){
+				char *temp;
+				char stor[2];
+				stor[0] = tolower(c);
+				stor[1] = '\0';
+				temp = malloc(sizeof(other));
+				strcpy(temp, other);
+				other = NULL;
+				other = (char *)realloc(other, sizeof(other) + 2);
+				strcpy(other, temp);
+				strcat(other, stor);
+			}
 
 			//Part of Final section: PLACEHOLDER, IN CASE PARAMS DIVERSIFY
 		}
@@ -194,27 +288,47 @@ void level_init(LevelInfo *linfo, Uint8 space){
 	slog("trying to add space!");
 	if (space) create_space();
 	//Should load up infomation from LevelInfo here! (SHOULD CHECK IF PARAMS AND LOC ARE THE SAME AMOUNT)
-	for (int i = 0; i <  list_get_count(linfo->shapeLocations); i++){
+	for (int i = 0; i < list_get_count(linfo->shapeLocations); i++){
 		slog("Size: %d", list_get_count(linfo->shapeLocations));
 		slog("Size: %d", list_get_count(linfo->shapeParams));
-		Vector2D *loc = (Vector2D *) list_get_nth(linfo->shapeLocations, i);
-		Vector2D *param = (Vector2D *) list_get_nth(linfo->shapeParams, i);
+		Vector2D *loc = (Vector2D *)list_get_nth(linfo->shapeLocations, i);
+		Vector2D *param = (Vector2D *)list_get_nth(linfo->shapeParams, i);
 		//slog("%lf",loc->x);
 		//slog("%lf",param->x);
 		if (loc != NULL && param != NULL){
 			slog("%lf", loc->x);
 			slog("%lf", param->x);
-			Shape wall = shape_rect(loc->x,loc->y,param->x,param->y);
+			//Replace with a spawn wall fucntion once you dod graphicall overhaul (turn this into a ent!)
+			Shape wall = shape_rect(loc->x, loc->y, param->x, param->y);
 			space_add_static_shape(gamelevel.space, wall);
 			//Have fucntions here to tie shape to a static entity to represent the wall
+			}
 		}
 		//Monster and obstcle calls go here
+	for (int z = 0;z < list_get_count(linfo->spawnLocations); z++){
+		Vector2D *loc = (Vector2D *)list_get_nth(linfo->spawnLocations, z);
+		char *type = (char *)list_get_nth(linfo->spawnList, z);
+		if (strcmp(type, "flinger") == 0){
+			obsticle_spawn(*loc, FLINGER);
+		}
+		else if (strcmp(type, "block") == 0){
+			obsticle_spawn(*loc, BLOCK);
+		}
+		else if(strcmp(type, "shooter") == 0){
+			monster_spawn(*loc, SHOOTER);
+		}
+		else if(strcmp(type, "patroller") == 0){
+			monster_spawn(*loc, PATROLLER);
+		}
+		else if(strcmp(type, "chaser") == 0){
+			monster_spawn(*loc, CHASER);
+		}
 	}
 	//free data here
 }
 void create_space(){
 	gamelevel.space = space_new_full(
-		1,
+		15,
 		shape_rect(0, 0, 2400, 1440).s.r,
 		0.1,
 		vector2d(0, 0),

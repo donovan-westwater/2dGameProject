@@ -18,8 +18,8 @@
 typedef struct
 {
 	TextLine    backgroundImage;    /**<background image for this level*/ //Might keep
-	TextLine    connectedSections;  /**Sections that are connected to this one*/
-	TextLine    spawnList;		    /**Monsters and obsticles to spawn*/
+	TextLine    connectedSections;  /**Sections that are connected to this one  NOT GOING TO BE USED  */
+	List    *spawnList;		    /**Monsters and obsticles to spawn*/
 	List   *spawnLocations;     /**Locations for Monsters and Obsticles to spawn*/
 	List    *shapeLocations;     /**Locations for static shapes*/
 	List  *shapeParams;			/**The length and widths of each static shape*/
