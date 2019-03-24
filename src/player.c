@@ -5,6 +5,7 @@
 #include "simple_logger.h"
 #include "camera.h"
 #include "collisions.h"
+#include "gui.h"
 //ask about how to add control over player (ask Natlile or Omar)
 static Entity *_player = NULL;  //represents the player
 
@@ -29,6 +30,7 @@ Entity *player_new(Vector2D position){
 	self->deliveries = 0;
 	self->deliverTotal = 4;
 	self->health = 50;
+	self->maxHealth = 50;
 	self->sprite = gf2d_sprite_load_image("images/motorcycle_blue.png");
 	
 	//Define shape
@@ -86,6 +88,11 @@ void player_update(Entity *self){
 	const Uint8 * keys;
 	const Uint32 * mouse;
 	int mx, my;
+	
+	//GUI UPDATES HERE
+	if (self->maxHealth)gui_set_health(self->health / self->maxHealth);
+	if (self->deliverTotal)gui_set_progress(self->deliveries / self->deliverTotal);
+
 	keys = SDL_GetKeyboardState(NULL);
 	mouse = SDL_GetMouseState(&mx, &my);
 	mx += camera_get_position().x;
@@ -140,7 +147,7 @@ void player_update(Entity *self){
 		self->deliveries = 0;
 		level_transition("levels/route2.txt", vector2d(900, 600));
 	}
-	//GUI UPDATES HERE
+	
 
 }
 

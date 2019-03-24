@@ -10,6 +10,7 @@
 #include "monster.h"
 #include "level.h"
 #include "obsticle.h"
+#include "gui.h"
 #include "delivery.h"
 
 int main(int argc, char * argv[])
@@ -45,6 +46,7 @@ int main(int argc, char * argv[])
 	entity_system_init(32);
 
 	camera_set_dimensions(0, 0, 1200, 700);
+	gui_setup_hud();
 	camera_set_bounds(0, 0,2400, 1400);
     SDL_ShowCursor(SDL_DISABLE);
     
@@ -61,6 +63,7 @@ int main(int argc, char * argv[])
    
 	/*Starting entities*/ //Put all of this in the level file
 	//player_new(vector2d(900, 600));
+	
 	linfo = level_info_load("levels/section1.txt");  
 	//Vector2D* check = (Vector2D *)list_get_nth(linfo->shapeLocations, 0);
 	//slog("%lf",check.x);
@@ -121,6 +124,7 @@ int main(int argc, char * argv[])
             //UI elements last
 			//space_draw(level_get_space(), vector2d(0, 0)); //put into level draw
 			level_draw();
+			gui_draw_hud();
             gf2d_sprite_draw(
                 mouse,
                 vector2d(mx,my),
