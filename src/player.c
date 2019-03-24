@@ -138,10 +138,11 @@ void player_update(Entity *self){
 	//player_draw(self);
 	if (self->health < 0){
 		slog("YOU LOSE!");
+		level_set_lose(1);
 		//WIP NEED TO MOVE OUT INTO GAME
-		Sprite *failure = gf2d_sprite_load_image("images/failure.png");
-		Vector2D center = camera_get_position();
-		gf2d_sprite_draw_image(failure, center);
+		//Sprite *failure = gf2d_sprite_load_image("images/failure.png");
+		//Vector2D center = camera_get_position();
+		//gf2d_sprite_draw_image(failure, center);
 		
 		self->_inuse = 0;
 		entity_free(self);
@@ -151,12 +152,13 @@ void player_update(Entity *self){
 	if (self->deliveries >= self->deliverTotal && self->deliverTotal != 0){
 		slog(" YOU COMPLETED THIS ROUTE!");
 		self->deliveries = 0;
+		level_set_win(1);
 		//WIP NEED TO MOVE OUT INTO GAME 
-		Sprite *victory = gf2d_sprite_load_image("images/victory.png");
-		Vector2D center = camera_get_position();
-		gf2d_sprite_draw_image(victory, center);
+		//Sprite *victory = gf2d_sprite_load_image("images/victory.png");
+		//Vector2D center = camera_get_position();
+		//gf2d_sprite_draw_image(victory, center);
 		
-		level_transition("levels/route2.txt", vector2d(900, 600));
+		//level_transition("levels/route2.txt", vector2d(900, 600));
 	}
 	
 

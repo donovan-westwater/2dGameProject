@@ -85,6 +85,14 @@ void level_build_tile_space(LevelInfo *linfo);
 
 Space *level_get_space();
 
+void level_set_win(int n);
+
+int level_get_win();
+
+void level_set_lose(int n);
+
+int level_get_lose();
+
 void create_space();
 /**
 * @brief load up a new game level and move the player into it

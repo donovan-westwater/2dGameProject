@@ -14,6 +14,8 @@
 //Level info
 typedef struct{
 	Space *space;
+	int win;
+	int lose;
 }Level;
 //First create a level_inti fucntion, then a  load level fucntion, then level clear,then level update, then level draw
 
@@ -458,6 +460,8 @@ void level_init(LevelInfo *linfo, Uint8 space){
 			monster_spawn(*loc, CHASER);
 		}
 	}
+	gamelevel.lose = 0;
+	gamelevel.win = 0;
 	//Intilize route from here (Remember this for save system)
 	//free data here
 }
@@ -477,6 +481,18 @@ void level_clear(){
 }
 Space* level_get_space(){
 	return gamelevel.space;
+}
+int level_get_lose(){
+	return gamelevel.lose;
+}
+void level_set_lose(int n){
+	gamelevel.lose = n;
+}
+int level_get_win(){
+	return gamelevel.win;
+}
+void level_set_win(int n){
+	gamelevel.win = n;
 }
 void level_draw(){
 	Vector2D cam;
