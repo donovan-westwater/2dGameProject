@@ -139,8 +139,10 @@ void entity_update(Entity *ent){
 	//body_draw(draw,vector2d(0,0));
 	//put everything else here later
 	//ent->health--;
-	if (ent->health == 0){
-		//Look up how DJ frees entities
+	if (ent->health <= 0){
+			ent->_inuse = 0;
+			entity_free(ent);
+		
 	}
 }
 
@@ -238,6 +240,9 @@ void entity_clear_all_but_player(){
 
 void entity_touch(Entity *self, Entity *other){
 	slog("THE BUG HAS TOUCHED!");
+	if (strcmp(other->hitbox.name, "player") == 0){
+		other->health -= 1;
+	}
 }
 Entity *entity_projectile(Entity *self,Vector2D dir){
 	Entity* projectile = entity_new();
@@ -271,7 +276,9 @@ Entity *entity_projectile(Entity *self,Vector2D dir){
 void projectile_touch(Entity *self, Entity *other){
 	slog(" I DID A HIT! ");
 	//add free fucntion here
-
+	if (strcmp(other->hitbox.name, "monster") == 0){
+		other->health -= 5;
+	}
 	self->_inuse = 0;
 	entity_free(self);
 }

@@ -341,7 +341,7 @@ Vector2D shape_get_normal_for_shape(Shape s, Shape s2)
 	return out;
 }
 
-Rect rect(float x, float y, float w, float h)
+Rect gf2d_rect(float x, float y, float w, float h)
 {
 	Rect r;
 	rect_set(r, x, y, w, h);

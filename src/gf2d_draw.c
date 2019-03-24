@@ -177,6 +177,20 @@ void gf2d_draw_circle(Vector2D center, int radius, Vector4D color)
                             255);
     free(pointArray);
 }
+void gf2d_draw_solid_rect(SDL_Rect rect, Vector4D color)
+{
+	SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(),
+		color.x,
+		color.y,
+		color.z,
+		color.w);
+	SDL_RenderFillRect(gf2d_graphics_get_renderer(), (const struct SDL_Rect *)&rect);
 
+	SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(),
+		255,
+		255,
+		255,
+		255);
+}
 
 /*eol@eof*/

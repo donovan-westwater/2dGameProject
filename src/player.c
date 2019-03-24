@@ -26,6 +26,9 @@ Entity *player_new(Vector2D position){
 	if (!self) return NULL;
 	self->position = position;
 	self->velocity = vector2d(0, 0);
+	self->deliveries = 0;
+	self->deliverTotal = 4;
+	self->health = 50;
 	self->sprite = gf2d_sprite_load_image("images/motorcycle_blue.png");
 	
 	//Define shape
@@ -126,6 +129,19 @@ void player_update(Entity *self){
 		camera_move(vector2d(0, -camera_get_dimensions().h));
 	}
 	//player_draw(self);
+	if (self->health < 0){
+		slog("YOU LOSE!");
+		self->_inuse = 0;
+		entity_free(self);
+		
+	}
+	if (self->deliveries >= self->deliverTotal && self->deliverTotal != 0){
+		slog(" YOU COMPLETED THIS ROUTE!");
+		self->deliveries = 0;
+		level_transition("levels/route2.txt", vector2d(900, 600));
+	}
+	//GUI UPDATES HERE
+
 }
 
 void player_set_position(Vector2D position)
@@ -139,6 +155,7 @@ void player_set_position(Vector2D position)
 	vector2d_copy(_player->hitbox.position, position);
 }
 int player_touch(Entity *self, Entity *other){
-	slog(" is touching ");
+	//slog(" is touching ");
+	//Placeholder for future ideas. Doesnt nothing atm
 	return 1;
 }

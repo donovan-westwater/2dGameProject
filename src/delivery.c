@@ -3,6 +3,7 @@
 #include "simple_logger.h"
 #include "collisions.h"
 #include "shape.h"
+#include "player.h"
 Entity *delivery_spawn(Vector2D position){
 	Entity *self;
 	self = entity_new();
@@ -34,8 +35,10 @@ void delivery_update(Entity *self){
 			if (strcmp(other->hitbox.name, "projectile") == 0 && other->hitbox.team == 2) {
 				if (vector2d_magnitude_compare(vector2d(self->position.x - other->position.x, self->position.y - other->position.y), 100) < 0){
 					slog(" ITS WORKING ");
-					//call delivery touch here!
+					//call delivery touch here! (Not nessesary atm)
+					player_get()->deliveries += 1;
 					entity_free(other);
+					entity_free(self);
 					}
 				}
 			}
@@ -43,8 +46,5 @@ void delivery_update(Entity *self){
 }
 void delivery_touch(Entity *self, Entity *other){
 	//Should push away other and keep self from moving
-	other->position = vector2d(other->position.x - other->hitbox.velocity.x, other->position.y - other->hitbox.velocity.y);
-	self->position = vector2d(self->position.x - other->velocity.x, self->position.y - other->velocity.y);
-	self->velocity = vector2d(0, 0);
-	slog(" IM A DILVERY PLACE");
+	
 }

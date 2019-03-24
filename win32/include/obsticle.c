@@ -37,6 +37,7 @@ Entity *obsticle_spawn(Vector2D position,ObsticleType type){
 
 void obsticle_touch(Entity *self, Entity *other){
 	//same as block touch but less damage;
+	other->health -= 0.5;
 	slog(" FLINGER ");
 }
 
@@ -84,6 +85,7 @@ void flinger_think(Entity *self){
 }
 
 void block_touch(Entity *self, Entity *other){
+	other->health -= 1;
 	slog(" BLOCK ");
 }
 
