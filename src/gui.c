@@ -2,7 +2,7 @@
 #include "shape.h"
 #include "gf2d_draw.h"
 #include "gf2d_sprite.h"
-
+#include "camera.h"
 typedef struct
 {
 	Sprite *hud;

@@ -464,7 +464,7 @@ void level_init(LevelInfo *linfo, Uint8 space){
 void create_space(){
 	gamelevel.space = space_new_full(
 		15,
-		shape_rect(0, 0, 2400, 1440).s.r,
+		shape_rect(0, 0, 2400, 2400).s.r,
 		0.1,
 		vector2d(0, 0),
 		0.0,

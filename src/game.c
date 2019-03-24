@@ -45,9 +45,9 @@ int main(int argc, char * argv[])
     gf2d_sprite_init(1024);
 	entity_system_init(32);
 
-	camera_set_dimensions(0, 0, 1200, 700);
+	camera_set_dimensions(0, 0, 1200, 800);
 	gui_setup_hud();
-	camera_set_bounds(0, 0,2400, 1400);
+	camera_set_bounds(0, 0,2400, 2400);
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
