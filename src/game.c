@@ -60,13 +60,18 @@ int main(int argc, char * argv[])
 		0.5); //was oringally 0.5
    
 	/*Starting entities*/ //Put all of this in the level file
-	player_new(vector2d(900, 600));
+	//player_new(vector2d(900, 600));
 	linfo = level_info_load("levels/section1.txt");  
 	//Vector2D* check = (Vector2D *)list_get_nth(linfo->shapeLocations, 0);
 	//slog("%lf",check.x);
 	if (linfo != NULL){
+		load_game();
 		level_init(linfo, 1);
 		route_load("levels/route1.txt");
+		
+		if (player_get() == NULL){
+			player_new(vector2d(900, 600));
+		}
 		//if(check =! NULL) slog("%lf", check->x);
 	}
 	
@@ -131,6 +136,7 @@ int main(int argc, char * argv[])
        //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second()); // TURN BACK ON ONCE LEVEL LOADING IS FIXED
 		
     }
+	save_game();
 	free(linfo);
 	gf2d_entity_system_close();
     slog("---==== END ====---");

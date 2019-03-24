@@ -101,4 +101,8 @@ int body_body_touch(Body *self, List *collisionList);
 * @param name of the route
 */
 void route_load(char *name);
+
+void save_game();
+
+void load_game();
 #endif

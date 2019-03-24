@@ -310,7 +310,8 @@ void route_load(char *name){
 		if (c == ' ') continue;
 		if (c == '|'){
 			//spawn the delivery points
-			y = atof(numbers);
+			int round = (int)atof(numbers);
+			y = round;
 			delivery_spawn(vector2d(x, y));
 			x = 0;
 			y = 0;
@@ -333,7 +334,8 @@ void route_load(char *name){
 			//slog(numbers);
 		}
 		else if (c == ','){
-			x = atof(numbers);
+			int round = (int)atof(numbers);
+			x = round;
 			numbers = "";
 		}
 	  }
@@ -341,11 +343,75 @@ void route_load(char *name){
 	fclose(reader);
 }
 void save_game(){
-
+	FILE *reader = fopen("saves/save.txt", "w");
+	if (reader == NULL){
+		slog("ERROR!!!!");
+		return NULL;
+	}
+	//Stores player position
+	char number[12];
+	fputs("position ", reader);
+	sprintf(number,"%lf",player_get()->position.x);
+	fputs(number, reader);
+	fputc(',', reader);
+	sprintf(number, "%lf", player_get()->position.y);
+	fputs(number, reader);
+	fputs("|\n", reader);
+	//Store players current route
+	fclose(reader);
 }
 
 void load_game(){
-
+	slog(" OPENING FILE ");
+	FILE *reader = fopen("saves/save.txt", "r");
+	if (reader == NULL){
+		slog("ERROR!!!!");
+		return NULL;
+	}
+	slog(" File Opened! ");
+	int isPosition = 0;
+	char *input = "";
+	char c = 'N';
+	double x = 0;
+	double y = 0;
+	while (c != EOF){
+		//read input and gather data
+		c = fgetc(reader);
+		if (c == ' ') continue;
+		if (c == '\n'){
+			input = "";
+			x = 0;
+			y = 0;
+			isPosition = 0;
+		}
+		if (strcmp(input, "position") == 0){
+			isPosition = 1;
+			input = "";
+		}
+		if (c == '|'){
+			y = atof(input);
+			player_new(vector2d(x,y));
+		}
+		else{
+			if (c == ','){
+				x = atof(input);
+				input = "";
+		}
+			else{
+				char *temp;
+				char stor[2];
+				stor[0] = tolower(c);
+				stor[1] = '\0';
+				temp = malloc(sizeof(input));
+				strcpy(temp, input);
+				input = NULL;
+				input = (char *)realloc(input, sizeof(input) + 2);
+				strcpy(input, temp);
+				strcat(input, stor);
+		}
+		}
+	}
+	fclose(reader);
 }
 void level_init(LevelInfo *linfo, Uint8 space){
 	if (!linfo)
@@ -443,7 +509,7 @@ void level_transition(char *filename, Vector2D pos){
 	
 	player_set_position(pos);
 
-
+	adding_all_bodies_to_space(gamelevel.space);
 
 }
 //Add proper documentation later calls all touch fucntions in collisionList
