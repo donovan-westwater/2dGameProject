@@ -279,6 +279,9 @@ void projectile_touch(Entity *self, Entity *other){
 	if (strcmp(other->hitbox.name, "monster") == 0){
 		other->health -= 5;
 	}
+	if (strcmp(other->hitbox.name, "player") == 0){
+		other->health -= 1;
+	}
 	self->_inuse = 0;
 	entity_free(self);
 }

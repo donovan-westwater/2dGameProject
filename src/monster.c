@@ -33,6 +33,7 @@ Entity *monster_spawn(Vector2D location,MonsterType type){
 	switch (type)
 	{
 	case PATROLLER:
+		self->velocity = vector2d(0, 1);
 		self->think = patroller_think;
 		break;
 	case CHASER:
@@ -59,7 +60,7 @@ void shooter_think(Entity *ent){
 	ent->velocity = vector2d(0, 0);
 	if (ent->timer % 100 == 0){
 		sprite = entity_projectile(ent, vector2d(0, -1));
-		sprite->sprite = gf2d_sprite_load_all("images/Fireball.png", 32, 32, 16);
+		sprite->sprite = gf2d_sprite_load_all("images/fireball_1.png", 32, 32, 16);
 	}
 
 }

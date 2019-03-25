@@ -113,4 +113,6 @@ void route_load(char *name);
 void save_game();
 
 void load_game();
+
+Entity *wall_spawn(double x, double y, double w, double h);
 #endif

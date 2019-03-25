@@ -20,6 +20,8 @@ typedef struct{
 //First create a level_inti fucntion, then a  load level fucntion, then level clear,then level update, then level draw
 
 static Level gamelevel = { 0 };
+
+Entity *wall_spawn(double x, double y, double w, double h);
 LevelInfo *level_info_new()
 {
 	LevelInfo *linfo = NULL;
@@ -415,6 +417,29 @@ void load_game(){
 	}
 	fclose(reader);
 }
+//Wall spawn here!
+Entity *wall_spawn(double x, double y, double w, double h){
+	Entity *self;
+	self = entity_new();
+	
+	self->position = vector2d(x, y);
+	self->velocity = vector2d(0, 0);
+	if (!self)return NULL;
+
+	self->shape = shape_rect(x, y, w, h);
+
+	//Sprite *sprite = gf2d_sprite_load_all("images/wall.jpg",w-x,h-y,16);
+	self->sprite = NULL;
+
+	if (&self->hitbox != NULL){
+		memset(&self->hitbox, 0, sizeof(self->hitbox));
+	}
+	self->hitbox.inactive = 1;
+
+	//have update fuction that pins delivery points in place
+	space_add_static_shape(level_get_space(), self->shape);
+	return self;
+}
 void level_init(LevelInfo *linfo, Uint8 space){
 	if (!linfo)
 	{
@@ -435,8 +460,9 @@ void level_init(LevelInfo *linfo, Uint8 space){
 			slog("%lf", loc->x);
 			slog("%lf", param->x);
 			//Replace with a spawn wall fucntion once you dod graphicall overhaul (turn this into a ent!)
-			Shape wall = shape_rect(loc->x, loc->y, param->x, param->y);
-			space_add_static_shape(gamelevel.space, wall);
+			//Shape wall = shape_rect(loc->x, loc->y, param->x, param->y);
+			//space_add_static_shape(gamelevel.space, wall);
+			Entity *spawn  = wall_spawn(loc->x,loc->y,param->x,param->y);
 			//Have fucntions here to tie shape to a static entity to represent the wall
 			}
 		}
@@ -551,3 +577,4 @@ int body_body_touch(Body *self, List *collisionList)
 	}
 	return 0;
 }
+
