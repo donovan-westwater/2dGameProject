@@ -118,7 +118,16 @@ void player_update(Entity *self){
 	{
 		level_transition("levels/route2.txt",vector2d(900,600));
 	}
-
+	//BIKE TRICK 
+	if (keys[SDL_SCANCODE_LSHIFT])
+	{
+		self->rotation.z += 1;
+		self->rotation.x = self->hitbox.shape->s.r.w/2;
+		self->rotation.y = self->hitbox.shape->s.r.h / 2;
+		//self->rotation.x = self->rotation.x*SDL_cos(self->rotation.z + 50) - self->rotation.y*SDL_sin(self->rotation.z + 50);
+		//self->rotation.y = self->rotation.x*SDL_cos(self->rotation.z+50) + self->rotation.y*SDL_sin(self->rotation.z+50);
+		//slog("%lf", self->rotation.x);
+	}
 	//camera_set_position(cameraPos);
 	//camera_set_position(vector2d(10,10));
 	//slog("%lf %lf", self->position.x, self->position.y);

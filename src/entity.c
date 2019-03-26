@@ -94,7 +94,7 @@ void entity_draw(Entity *self){
 		drawPosition,
 		&self->scale,
 		NULL,
-		NULL,
+		&self->rotation,
 		NULL,
 		NULL,
 		self->frame);
