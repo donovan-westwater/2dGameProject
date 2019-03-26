@@ -7,6 +7,9 @@
 Entity *delivery_spawn(Vector2D position){
 	Entity *self;
 	self = entity_new();
+	Sprite *sprite = gf2d_sprite_load_image("images/buildings.png");
+	self->scale = vector2d(0.3,0.3);
+	self->sprite = sprite;
 	self->position = position;
 	self->velocity = vector2d(0, 0);
 	if (!self)return NULL;

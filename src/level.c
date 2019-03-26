@@ -427,7 +427,8 @@ Entity *wall_spawn(double x, double y, double w, double h){
 	if (!self)return NULL;
 
 	self->shape = shape_rect(x, y, w, h);
-
+	
+	//figure out how to properly automate scaling!!
 	//Sprite *sprite = gf2d_sprite_load_all("images/wall.jpg",w-x,h-y,16);
 	self->sprite = NULL;
 

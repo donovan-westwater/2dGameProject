@@ -35,12 +35,18 @@ Entity *monster_spawn(Vector2D location,MonsterType type){
 	case PATROLLER:
 		self->velocity = vector2d(0, 1);
 		self->think = patroller_think;
+		self->scale = vector2d(0.3, 0.3);
+		Sprite *sprite = gf2d_sprite_load_image("images/ImpGuy.jpg");
+		self->sprite = sprite;
 		break;
 	case CHASER:
 		self->think = chaser_think;
 		break;
 	case SHOOTER:
 		self->think = shooter_think;
+		self->scale = vector2d(0.3, 0.3);
+		Sprite *imp = gf2d_sprite_load_image("images/ImpGuy.jpg");
+		self->sprite = imp;
 		break;
 	}
 

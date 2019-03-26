@@ -24,10 +24,16 @@ Entity *obsticle_spawn(Vector2D position,ObsticleType type){
 	
 	if (type == BLOCK){
 		self->touch = block_touch;
+		self->scale = vector2d(0.3, 0.3);
+		Sprite *sprite = gf2d_sprite_load_image("images/roadblock.png");
+		self->sprite = sprite;
 	}
 	else{
 		self->think = flinger_think;
 		self->touch = obsticle_touch;
+		self->scale = vector2d(0.3,0.3);
+		Sprite *sprite = gf2d_sprite_load_image("images/black_hole.jpg");
+		self->sprite = sprite;
 
 	}
 	//have update fuction that pins delivery points in place
