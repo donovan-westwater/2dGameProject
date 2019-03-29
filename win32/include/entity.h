@@ -153,4 +153,8 @@ void projectile_update(Entity *self);
 Entity *get_entityList();
 
 Uint32 get_maxEntites();
+
+int entity_wall_check(Entity *self, Vector2D dir);
+
+void entity_world_snap(Entity *self);
 #endif

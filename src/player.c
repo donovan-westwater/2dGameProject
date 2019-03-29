@@ -102,6 +102,8 @@ void player_update(Entity *self){
 	if (keys[SDL_SCANCODE_D]) self->position.x += 2;
 	if (keys[SDL_SCANCODE_A]) self->position.x -= 2;
 
+	entity_world_snap(self);
+
 	if (keys[SDL_SCANCODE_UP]) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y - 1));
 	if (keys[SDL_SCANCODE_DOWN]) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y + 1));
 	if (keys[SDL_SCANCODE_LEFT]) camera_set_position(vector2d(camera_get_position().x - 1, camera_get_position().y));

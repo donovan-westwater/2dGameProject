@@ -6,6 +6,10 @@
 #include "camera.h"
 #include "level.h"
 #include "player.h"
+#include "shape.h"
+#include "body.h"
+#include "collisions.h"
+#include "List.h"
 //the code sample we made above
 //A bunch of this code comes from dj's project. This is to give me a start and help me understand systems
 //ADD THINK SYSTEM!
@@ -313,3 +317,59 @@ void entity_free(Entity *self){
 	space_remove_body(level_get_space(), &self->hitbox);
 }
 */
+int entity_wall_check(Entity *self, Vector2D dir){
+
+	Shape s;
+	int i, count;
+	Collision *c;
+	List *collisionList;
+	CollisionFilter filter = {
+		1,
+		WORLD_LAYER,
+		0,
+		0,
+		&self->hitbox
+	};
+
+	if(!self)return 0;
+	s = body_to_shape(&self->hitbox);
+	shape_move(&s, dir);
+
+	collisionList = collision_check_space_shape(level_get_space(), s, filter);
+	if (collisionList != NULL)
+	{
+		count = list_get_count(collisionList);
+		for (i = 0; i < count; i++)
+		{
+			c = (Collision*)list_get_nth(collisionList, i);
+			if (!c)continue;
+			if (!c->shape)continue;
+			shape_draw(*c->shape, gf2d_color(255, 255, 0, 255), camera_get_offset());
+		}
+		collision_list_free(collisionList);
+		return 1;
+	}
+	return 0;
+}
+
+
+
+void entity_world_snap(Entity *self)
+{
+	if (entity_wall_check(self, vector2d(0, 1)))
+	{
+		self->position.y -= 1;
+	}
+	if (entity_wall_check(self, vector2d(0, -1)))
+	{
+		self->position.y += 1;
+	}
+	if (entity_wall_check(self, vector2d(1, 0)))
+	{
+		self->position.x -= 1;
+	}
+	if (entity_wall_check(self, vector2d(-1, 0)))
+	{
+		self->position.x += 1;
+	}
+}
