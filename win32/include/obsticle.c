@@ -78,8 +78,8 @@ void flinger_think(Entity *self){
 					Vector2D pull = vector2d(self->position.x - other->position.x, self->position.y - other->position.y);
 					double mag = vector2d_magnitude(pull);
 					pull = vector2d(pull.x / mag, pull.y / mag);
-					other->position.x +=  pull.x;
-					other->position.y +=  pull.y;
+					other->position.x +=  2*pull.x;
+					other->position.y +=  2*pull.y;
 					//other->hitbox.position.x == pull.x;
 					//other->hitbox.position.y -= pull.y;
 

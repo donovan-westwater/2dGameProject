@@ -29,6 +29,8 @@ typedef struct Entity_S
 	//This is the center point a.k.a postion
 	Vector2D position; /**<EXPLAIN TYPE>*/
 	Vector2D velocity;
+	Vector2D flip;
+	Vector2D facing;
 	Shape shape;    /**The shape of the hitbox for the entity. Good for touch fucntions**/
 	Body hitbox;   /**The hitbox for the entity. Good for touch fucntions**/
 	//Add a velocity vector here to test if the intersection math works

@@ -26,7 +26,10 @@ Entity *player_new(Vector2D position){
 	Entity *self = entity_new();
 	if (!self) return NULL;
 	self->position = position;
+	//Define facing and velocity and rotation
+	self->facing = vector2d(0, -1);
 	self->velocity = vector2d(0, 0);
+
 	self->deliveries = 0;
 	self->deliverTotal = 4;
 	self->health = 50;
@@ -36,6 +39,7 @@ Entity *player_new(Vector2D position){
 	//Define shape
 	self->shape = shape_rect(0, 0, 10, 10);
 	//Define hitbox
+	
 	body_set(&self->hitbox,
 		"player",
 		1,
@@ -97,17 +101,59 @@ void player_update(Entity *self){
 	mouse = SDL_GetMouseState(&mx, &my);
 	mx += camera_get_position().x;
 	my += camera_get_position().y;
-	if (keys[SDL_SCANCODE_W]) self->position.y -= 2;
-	if (keys[SDL_SCANCODE_S]) self->position.y += 2;
-	if (keys[SDL_SCANCODE_D]) self->position.x += 2;
-	if (keys[SDL_SCANCODE_A]) self->position.x -= 2;
-
+	//Convert velocity into a radius (Ie convert this into polar coords)
+	//self->velocity.x = (self->velocity.x)*(self->facing.x);
+	//self->velocity.y = (self->velocity.y)*(self->facing.y);
+	//slog("%lf %lf", self->facing.x, self->facing.y);
+	//slog("%lf", self->rotation.z);
+	slog("  %lf %lf", (self->velocity.x+1)*self->facing.x, (self->velocity.y+1)*self->facing.y);
+	if (self->velocity.x < -1){
+		self->velocity.x = -1;
+	}
+	if (self->velocity.y < -1){
+		self->velocity.y = -1;
+	}
+	if (self->velocity.x > 1){
+		self->velocity.x = 1;
+	}
+	if (self->velocity.y > 1){
+		self->velocity.y = 1;
+	}
+	//get unit vector and add a smaller version of current direction to velocity
+	if (keys[SDL_SCANCODE_W]){ 
+		//self->position.y -= 2; 
+		self->velocity.x += 1.1*self->facing.x;
+		self->velocity.y += 1.1*self->facing.y;
+		
+	}
+	if (keys[SDL_SCANCODE_S]){
+		//self->position.y += 2;
+		self->velocity.x -= 1.1*self->facing.x;
+		self->velocity.y -= 1.1*self->facing.y;
+		
+		
+	}
+	if (keys[SDL_SCANCODE_D]){
+		//self->position.x += 2;
+		self->rotation.z += 1;
+		self->rotation.x = self->hitbox.shape->s.r.w / 2;
+		self->rotation.y = self->hitbox.shape->s.r.h / 2;
+		self->facing = vector2d(SDL_cos((self->rotation.z - 90)*(M_PI / 180)), SDL_sin((self->rotation.z - 90) *(M_PI / 180)));
+	}
+	if (keys[SDL_SCANCODE_A]){
+		self->rotation.z -= 1;
+		self->rotation.x = self->hitbox.shape->s.r.w / 2;
+		self->rotation.y = self->hitbox.shape->s.r.h / 2;
+		self->facing = vector2d(SDL_cos((self->rotation.z - 90) *(M_PI / 180)), SDL_sin((self->rotation.z - 90)*(M_PI / 180)));
+		//self->position.x -= 2;
+	}
 	entity_world_snap(self);
 
 	if (keys[SDL_SCANCODE_UP]) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y - 1));
 	if (keys[SDL_SCANCODE_DOWN]) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y + 1));
 	if (keys[SDL_SCANCODE_LEFT]) camera_set_position(vector2d(camera_get_position().x - 1, camera_get_position().y));
 	if (keys[SDL_SCANCODE_RIGHT]) camera_set_position(vector2d(camera_get_position().x + 1, camera_get_position().y));
+
 	if (keys[SDL_SCANCODE_SPACE] && self->timer % 40 == 0) {
 		double x = mx - self->position.x;
 		double y = my - self->position.y;
@@ -123,6 +169,7 @@ void player_update(Entity *self){
 	//BIKE TRICK 
 	if (keys[SDL_SCANCODE_LSHIFT])
 	{
+		//should lock in the spin!
 		self->rotation.z += 1;
 		self->rotation.x = self->hitbox.shape->s.r.w/2;
 		self->rotation.y = self->hitbox.shape->s.r.h / 2;
@@ -132,7 +179,7 @@ void player_update(Entity *self){
 	}
 	//camera_set_position(cameraPos);
 	//camera_set_position(vector2d(10,10));
-	//slog("%lf %lf", self->position.x, self->position.y);
+	
 	//This is camera tracking. To make more accurate, seperate the conditions so that all directions have their own check
 	if (self->position.x > (camera_get_position().x + camera_get_dimensions().w)){
 		camera_move(vector2d(camera_get_dimensions().w,0));
@@ -171,7 +218,11 @@ void player_update(Entity *self){
 		
 		//level_transition("levels/route2.txt", vector2d(900, 600));
 	}
-	
+	//slog("%lf %lf", self->position.x, self->position.y);
+	//Vector2D  center = vector2d(self->position.x + (self->hitbox.shape->s.r.w / 2), self->position.x+ (self->hitbox.shape->s.r.h / 2));
+	//slog("           %lf %lf", center.x, center.y);
+	Vector2D drawpoint = vector2d(self->position.x + 50 * (self->facing.x+0.001), self->position.y + 50 * (self->facing.y+0.1));
+	gf2d_draw_line(self->position, drawpoint, vector4d(255, 255, 1, 255));
 
 }
 
