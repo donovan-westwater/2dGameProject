@@ -92,7 +92,8 @@ void player_update(Entity *self){
 	const Uint8 * keys;
 	const Uint32 * mouse;
 	int mx, my;
-	
+	double N;
+	double M;
 	//GUI UPDATES HERE
 	if (self->maxHealth)gui_set_health(self->health / self->maxHealth);
 	if (self->deliverTotal)gui_set_progress(self->deliveries / self->deliverTotal);
@@ -101,52 +102,99 @@ void player_update(Entity *self){
 	mouse = SDL_GetMouseState(&mx, &my);
 	mx += camera_get_position().x;
 	my += camera_get_position().y;
-	//Convert velocity into a radius (Ie convert this into polar coords)
+	
 	//self->velocity.x = (self->velocity.x)*(self->facing.x);
 	//self->velocity.y = (self->velocity.y)*(self->facing.y);
-	//slog("%lf %lf", self->facing.x, self->facing.y);
+	
+	
+	
+	
 	//slog("%lf", self->rotation.z);
-	slog("  %lf %lf", (self->velocity.x+1)*self->facing.x, (self->velocity.y+1)*self->facing.y);
-	if (self->velocity.x < -1){
-		self->velocity.x = -1;
+	//slog("  %lf %lf", (self->velocity.x+1)*self->facing.x, (self->velocity.y+1)*self->facing.y);
+	
+	if (abs(self->velocity.x) > 0.001 && abs(self->velocity.y) > 0.001){
+		self->velocity.x += -0.001*self->velocity.x;
+		self->velocity.y += -0.001*self->velocity.y;
 	}
-	if (self->velocity.y < -1){
-		self->velocity.y = -1;
+	else{
+		self->velocity.x = 0;
+		self->velocity.y = 0;
 	}
-	if (self->velocity.x > 1){
-		self->velocity.x = 1;
-	}
-	if (self->velocity.y > 1){
-		self->velocity.y = 1;
-	}
-	//get unit vector and add a smaller version of current direction to velocity
+
+	
+	//Have next velocity be a rotated version of the previous velocity (Not moving is the exception)
+	//To do this find a way to predict the magitude of the next velocity or have facing be rotated at the same time as velocity
+	//leaning towards the latter
 	if (keys[SDL_SCANCODE_W]){ 
-		//self->position.y -= 2; 
-		self->velocity.x += 1.1*self->facing.x;
-		self->velocity.y += 1.1*self->facing.y;
-		
+		//self->position.y -= 2;
+		if (vector2d_equal(self->velocity, vector2d(0, 0))) vector2d_copy(self->velocity, self->facing);
+		self->velocity.x += 0.9*self->velocity.x;
+		self->velocity.y += 0.9*self->velocity.y;
+		slog("%lf %lf", self->velocity.x, self->velocity.y);
 	}
 	if (keys[SDL_SCANCODE_S]){
 		//self->position.y += 2;
-		self->velocity.x -= 1.1*self->facing.x;
-		self->velocity.y -= 1.1*self->facing.y;
+		Vector2D flip = vector2d(-self->facing.x, -self->facing.y);
+		if (vector2d_equal(self->velocity, vector2d(0, 0))) vector2d_copy(self->velocity, flip);
+		self->velocity.x -= 0.2*self->velocity.x;
+		self->velocity.y -= 0.2*self->velocity.y;
 		
 		
 	}
+	//Get angle of rotation from curent vector!
 	if (keys[SDL_SCANCODE_D]){
 		//self->position.x += 2;
 		self->rotation.z += 1;
 		self->rotation.x = self->hitbox.shape->s.r.w / 2;
 		self->rotation.y = self->hitbox.shape->s.r.h / 2;
-		self->facing = vector2d(SDL_cos((self->rotation.z - 90)*(M_PI / 180)), SDL_sin((self->rotation.z - 90) *(M_PI / 180)));
+		//self->facing = vector2d(SDL_cos((self->rotation.z - 90)*(M_PI / 180)), SDL_sin((self->rotation.z - 90) *(M_PI / 180)));
+		self->facing = vector2d_rotate(self->facing, (1*M_PI) / 180);
+		vector2d_copy(self->velocity, vector2d_rotate(self->velocity, (1 * M_PI) / 180));
+		slog("%lf %lf", self->velocity.x, self->velocity.y);
+		
 	}
 	if (keys[SDL_SCANCODE_A]){
+		//self->position.x -= 2;
 		self->rotation.z -= 1;
 		self->rotation.x = self->hitbox.shape->s.r.w / 2;
 		self->rotation.y = self->hitbox.shape->s.r.h / 2;
-		self->facing = vector2d(SDL_cos((self->rotation.z - 90) *(M_PI / 180)), SDL_sin((self->rotation.z - 90)*(M_PI / 180)));
-		//self->position.x -= 2;
+		//self->facing = vector2d(SDL_cos((self->rotation.z - 90) *(M_PI / 180)), SDL_sin((self->rotation.z - 90)*(M_PI / 180)));
+		self->facing = vector2d_rotate(self->facing, (-1*M_PI) / 180);
+		vector2d_copy(self->velocity, vector2d_rotate(self->velocity, (-1 * M_PI) / 180));
+		slog("%lf %lf", self->velocity.x, self->velocity.y);
 	}
+	//The breaks
+	if (keys[SDL_SCANCODE_F]){
+		if (abs(self->velocity.x) > 0.001 && abs(self->velocity.y) > 0.001){
+			self->velocity.x += -self->velocity.x / 2;
+			self->velocity.y += -self->velocity.y / 2;
+		}
+		else{
+			self->velocity.x = 0;
+			self->velocity.y = 0;
+		}
+	}
+	//Should act as the maximum velocity
+	if (vector2d_magnitude(self->velocity) > 3){
+		double mag = vector2d_magnitude(self->velocity);
+		Vector2D unit = vector2d(self->velocity.x/mag, self->velocity.y / mag);
+		self->velocity.x = 3 * unit.x;
+		self->velocity.y = 3 * unit.y;
+	}
+	/*
+	if (self->velocity.x < -2){
+		self->velocity.x = -2;
+	}
+	if (self->velocity.y < -2){
+		self->velocity.y = -2;
+	}
+	if (self->velocity.x > 2){
+		self->velocity.x = 2;
+	}
+	if (self->velocity.y > 2){
+		self->velocity.y = 2;
+	}
+	*/
 	entity_world_snap(self);
 
 	if (keys[SDL_SCANCODE_UP]) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y - 1));
@@ -166,7 +214,7 @@ void player_update(Entity *self){
 	{
 		level_transition("levels/route2.txt",vector2d(900,600));
 	}
-	//BIKE TRICK 
+	//BIKE TRICK [WIP]
 	if (keys[SDL_SCANCODE_LSHIFT])
 	{
 		//should lock in the spin!
@@ -222,7 +270,10 @@ void player_update(Entity *self){
 	//Vector2D  center = vector2d(self->position.x + (self->hitbox.shape->s.r.w / 2), self->position.x+ (self->hitbox.shape->s.r.h / 2));
 	//slog("           %lf %lf", center.x, center.y);
 	Vector2D drawpoint = vector2d(self->position.x + 50 * (self->facing.x+0.001), self->position.y + 50 * (self->facing.y+0.1));
+	vector2d_add(drawpoint, drawpoint, camera_get_offset());
 	gf2d_draw_line(self->position, drawpoint, vector4d(255, 255, 1, 255));
+
+	//slog("%lf", (self->velocity.x / self->velocity.y)-(N/M));
 
 }
 
