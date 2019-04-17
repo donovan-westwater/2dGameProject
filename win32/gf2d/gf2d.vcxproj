@@ -83,6 +83,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\camera.c" />
     <ClCompile Include="..\..\src\delivery.c" />
+    <ClCompile Include="..\..\src\editor.c" />
     <ClCompile Include="..\..\src\entity.c" />
     <ClCompile Include="..\..\src\game.c" />
     <ClCompile Include="..\..\src\gf2d_draw.c" />
@@ -95,6 +96,7 @@
     <ClCompile Include="..\..\src\player.c" />
     <ClCompile Include="..\..\src\shape.c" />
     <ClCompile Include="..\..\src\simple_logger.c" />
+    <ClCompile Include="..\..\src\windows.c" />
     <ClCompile Include="..\include\obsticle.c" />
     <ClCompile Include="Body.c" />
     <ClCompile Include="collisions.c" />
@@ -113,12 +115,14 @@
     <ClInclude Include="..\..\include\simple_logger.h" />
     <ClInclude Include="..\include\camera.h" />
     <ClInclude Include="..\include\delivery.h" />
+    <ClInclude Include="..\include\editor.h" />
     <ClInclude Include="..\include\entity.h" />
     <ClInclude Include="..\include\gui.h" />
     <ClInclude Include="..\include\level.h" />
     <ClInclude Include="..\include\monster.h" />
     <ClInclude Include="..\include\obsticle.h" />
     <ClInclude Include="..\include\player.h" />
+    <ClInclude Include="..\include\windows.h" />
     <ClInclude Include="Body.h" />
     <ClInclude Include="collisions.h" />
     <ClInclude Include="dynamic_body.h" />

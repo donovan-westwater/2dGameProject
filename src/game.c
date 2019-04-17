@@ -45,9 +45,9 @@ int main(int argc, char * argv[])
     gf2d_sprite_init(1024);
 	entity_system_init(32);
 
-	camera_set_dimensions(0, 0, 1200, 800);
+	camera_set_dimensions(0, 0, 1200, 720); //1/2 * bounds.x, 1/3 * bounds.y
 	gui_setup_hud();
-	camera_set_bounds(0, 0,2400, 2400);
+	camera_set_bounds(0, 0,9600, 9600);
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
@@ -55,7 +55,7 @@ int main(int argc, char * argv[])
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
 	space = space_new_full(
 		1,
-		shape_rect(0, 0, 2400, 1440).s.r,
+		shape_rect(0, 0, 9600, 9600).s.r, //ori 2400 1440
 		0.1,
 		vector2d(0, 0),
 		0.0,
@@ -64,7 +64,8 @@ int main(int argc, char * argv[])
 	/*Starting entities*/ //Put all of this in the level file
 	//player_new(vector2d(900, 600));
 	
-	linfo = level_info_load("levels/section1.txt");  
+	//linfo = level_info_load("levels/section1.txt");// Test overworld
+	linfo = level_info_load("levels/editorTest.txt");
 	//Vector2D* check = (Vector2D *)list_get_nth(linfo->shapeLocations, 0);
 	//slog("%lf",check.x);
 	if (linfo != NULL){

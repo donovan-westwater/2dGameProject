@@ -36,6 +36,7 @@ LevelInfo *level_info_new()
 }
 LevelInfo *level_info_load(char *filename){
 	LevelInfo *out = level_info_new();
+	out->tilesize = vector2d(200, 200);
 	slog(" OPENING FILE ");
 	FILE *reader = fopen(filename,"r");
 	if (reader == NULL){
@@ -417,7 +418,7 @@ void load_game(){
 	}
 	fclose(reader);
 }
-//Wall spawn here!
+//Wall spawn here! Rewrite to make param const
 Entity *wall_spawn(double x, double y, double w, double h){
 	Entity *self;
 	self = entity_new();
@@ -495,7 +496,7 @@ void level_init(LevelInfo *linfo, Uint8 space){
 void create_space(){
 	gamelevel.space = space_new_full(
 		15,
-		shape_rect(0, 0, 2400, 2400).s.r,
+		shape_rect(0, 0, 4800, 2880).s.r, //2400 2400
 		0.1,
 		vector2d(0, 0),
 		0.0,

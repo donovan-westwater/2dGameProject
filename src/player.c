@@ -130,7 +130,8 @@ void player_update(Entity *self){
 		if (vector2d_equal(self->velocity, vector2d(0, 0))) vector2d_copy(self->velocity, self->facing);
 		self->velocity.x += 0.9*self->velocity.x;
 		self->velocity.y += 0.9*self->velocity.y;
-		slog("%lf %lf", self->velocity.x, self->velocity.y);
+		//slog("%lf", vector2d_magnitude(self->velocity));
+		//slog("%lf", vector2d_magnitude(self->velocity));
 	}
 	if (keys[SDL_SCANCODE_S]){
 		//self->position.y += 2;
@@ -150,7 +151,8 @@ void player_update(Entity *self){
 		//self->facing = vector2d(SDL_cos((self->rotation.z - 90)*(M_PI / 180)), SDL_sin((self->rotation.z - 90) *(M_PI / 180)));
 		self->facing = vector2d_rotate(self->facing, (1*M_PI) / 180);
 		vector2d_copy(self->velocity, vector2d_rotate(self->velocity, (1 * M_PI) / 180));
-		slog("%lf %lf", self->velocity.x, self->velocity.y);
+		slog("%lf", vector2d_magnitude(self->velocity));
+		//slog("%lf %lf", self->velocity.x, self->velocity.y);
 		
 	}
 	if (keys[SDL_SCANCODE_A]){
@@ -161,7 +163,8 @@ void player_update(Entity *self){
 		//self->facing = vector2d(SDL_cos((self->rotation.z - 90) *(M_PI / 180)), SDL_sin((self->rotation.z - 90)*(M_PI / 180)));
 		self->facing = vector2d_rotate(self->facing, (-1*M_PI) / 180);
 		vector2d_copy(self->velocity, vector2d_rotate(self->velocity, (-1 * M_PI) / 180));
-		slog("%lf %lf", self->velocity.x, self->velocity.y);
+		slog("%lf", vector2d_magnitude(self->velocity));
+		//slog("%lf %lf", self->velocity.x, self->velocity.y);
 	}
 	//The breaks
 	if (keys[SDL_SCANCODE_F]){
@@ -174,12 +177,13 @@ void player_update(Entity *self){
 			self->velocity.y = 0;
 		}
 	}
-	//Should act as the maximum velocity
-	if (vector2d_magnitude(self->velocity) > 3){
+	//Should act as the maximum velocity 
+	//Ceiling should be higher than the actual
+	if (vector2d_magnitude(self->velocity) > 2){
 		double mag = vector2d_magnitude(self->velocity);
 		Vector2D unit = vector2d(self->velocity.x/mag, self->velocity.y / mag);
-		self->velocity.x = 3 * unit.x;
-		self->velocity.y = 3 * unit.y;
+		self->velocity.x = 4 * unit.x;
+		self->velocity.y = 4 * unit.y;
 	}
 	/*
 	if (self->velocity.x < -2){

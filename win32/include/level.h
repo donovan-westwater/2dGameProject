@@ -23,6 +23,7 @@ typedef struct
 	List   *spawnLocations;     /**Locations for Monsters and Obsticles to spawn*/
 	List    *shapeLocations;     /**Locations for static shapes*/
 	List  *shapeParams;			/**The length and widths of each static shape*/
+	Vector2D tilesize;          /**The length and width of each static shape in the Tile Format*/
 }LevelInfo;
 
 /**
