@@ -581,7 +581,28 @@ int body_body_touch(Body *self, List *collisionList)
 }
 
 void level_wall_save(Vector2D pos, char *filename){
-
+	FILE *write;
+	write = fopen(filename, "a");
+	if (write == NULL) {
+		perror("cannot open file");
+		return 1;
+	}
+	char type[32] = "\nwall |";
+	char position[256] = { 0x0 };
+	char param[256] = " 200,200|";
+	char tmp[32] = { 0x0 };
+	char out[256] = { 0x0 };
+	itoa(pos.x, tmp, 10);
+	strcat(position, tmp);
+	strcat(position, ",");
+	itoa(pos.y, tmp, 10);
+	strcat(position, tmp);
+	strcat(position, "|");
+	strcat(out, type);
+	strcat(out, position);
+	strcat(out, param);
+	fprintf(write,out);
+	fclose(write);
 }
 void level_wall_delete(Vector2D pos, char *filename){
 	//Run through the overworld file and match the position to the line or section with the corresponding postion
