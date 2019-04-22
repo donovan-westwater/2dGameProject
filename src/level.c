@@ -580,3 +580,111 @@ int body_body_touch(Body *self, List *collisionList)
 	return 0;
 }
 
+void level_wall_save(Vector2D pos, char *filename){
+
+}
+void level_wall_delete(Vector2D pos, char *filename){
+	//Run through the overworld file and match the position to the line or section with the corresponding postion
+	FILE *fp1, *fp2;
+
+	//consider 255 character string to store filename
+	//char filename[256];
+	int c, last, del_line, lineno;
+	char tmp[256] = { 0x0 };
+	char delWord[256] = { 0x0 };
+	
+	//asks user for file name
+	//printf("Enter file name: ");
+	itoa(pos.x, tmp, 10);
+	strcat(delWord, tmp);
+	strcat(delWord, ",");
+	itoa(pos.y, tmp, 10);
+	strcat(delWord, tmp);
+	strcpy(tmp, "");
+	///receives file name from user and stores in 'filename'
+	/*if (scanf("%255s", filename) != 1) {
+		perror("missing filename");
+		return 1;
+	}
+	*/
+	//open file in read mode
+	fp1 = fopen(filename, "r");
+	if (fp1 == NULL) {
+		perror("cannot open file");
+		return 1;
+	}
+
+	//until the last character of file is obtained
+	last = '\n';
+	lineno = 0;
+	while ((c = fgets(tmp, sizeof(tmp), fp1))) {
+		if (last == '\n') {
+			printf("%4d: ", ++lineno);
+		}
+		if (strstr(tmp, delWord))
+			del_line = lineno;
+		//print current character and read next character
+		putchar(c);
+		last = c;
+	}
+
+	rewind(fp1);
+	if (del_line < 1 || del_line > lineno) {
+		//printf("no such line: %d\n", del_line);
+		//return 1;
+	}
+
+	//open new file in write mode
+	fp2 = fopen("levels/copy.txt", "w");
+	if (fp2 == NULL) {
+		perror("cannot open copy.c");
+		return 1;
+	}
+
+	lineno = 1;
+	while ((c = getc(fp1)) != EOF) {
+		//except the line to be deleted
+		if (lineno != del_line) {
+			//copy all lines in file copy.c
+			putc(c, fp2);
+		}
+		if (c == '\n')
+			lineno++;
+	}
+
+	//close both files.
+	fclose(fp1);
+	if (fclose(fp2)) {
+		perror("write error to copy.c");
+		return 1;
+	}
+
+	// remove original file (unsafe)
+	// uncomment this if your system does not allow rename
+	// to overwrite existing files
+	if (remove(filename)) {
+	     perror("cannot remove source file");
+	    return 1;
+	 }
+
+	//rename the file copy.c to original name
+
+	if (rename("levels/copy.txt", "levels/editorTest.txt")) {
+		perror("cannot rename file");
+		return 1;
+	}
+
+	printf("\nThe contents of file after being modified are as  follows:\n");
+
+	fp1 = fopen(filename, "r");
+	if (fp1 == NULL) {
+		perror("cannot re-open modified file");
+		return 1;
+	}
+
+	while ((c = getc(fp1)) != EOF) {
+		putchar(c);
+	}
+	fclose(fp1);
+	return 0;
+}

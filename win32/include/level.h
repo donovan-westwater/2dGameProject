@@ -116,4 +116,8 @@ void save_game();
 void load_game();
 
 Entity *wall_spawn(double x, double y, double w, double h);
+
+void level_wall_save(Vector2D pos, char *filename);
+
+void level_wall_delete(Vector2D pos, char *filename);
 #endif

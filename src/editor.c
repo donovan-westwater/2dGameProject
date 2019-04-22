@@ -16,25 +16,27 @@ typedef struct EditorData_S
 
 EditorData editorData = { 0 };
 static Window *_editor = NULL;
-/*
-int editor_draw(Window *win)
+
+int editor_draw() //Formaly had Window *win as parameter
 {
-	Vector2D mouse;
+	int mx, my;
+	const Uint32 *mouse;
+	mouse = SDL_GetMouseState(&mx, &my);
 	Rect tileHighlight;
 	if (!editorData.level)return 0;
 
-	mouse = gf2d_mouse_get_position();
+	
 
-	tileHighlight.x = (Uint32)(mouse.x / editorData.level->tilesize.x) * editorData.level->tilesize.x;
-	tileHighlight.y = (Uint32)(mouse.y / editorData.level->tilesize.y) * editorData.level->tilesize.y;
+	tileHighlight.x = (Uint32)(mx / editorData.level->tilesize.x) * editorData.level->tilesize.x;
+	tileHighlight.y = (Uint32)(my / editorData.level->tilesize.y) * editorData.level->tilesize.y;
 	tileHighlight.w = editorData.level->tilesize.x;
 	tileHighlight.h = editorData.level->tilesize.y;
 	rect_draw(tileHighlight, gf2d_color(255, 200, 0, 255));
 
-	/*draw rects around the tile the mouse is over/
+	/*draw rects around the tile the mouse is over*/
 	return 0;
 }
-*/
+
 
 //not used yet WIP
 /*
@@ -51,9 +53,10 @@ void editor_new_map(void *data)
 */
 
 //WIP - needed!
-/*
-int editor_update(Window *win, List *updateList)
+
+int editor_update() //Window *win, List *updateList
 {
+	/*
 	int i, count;
 	Element *e;
 	Vector2D mouse, tile;
@@ -93,9 +96,10 @@ int editor_update(Window *win, List *updateList)
 			break;
 		}
 	}
+	*/
 	return 0;
 }
-*/
+
 //Not being used! WIP
 /*
 void editor_launch()

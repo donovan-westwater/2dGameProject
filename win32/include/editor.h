@@ -5,4 +5,6 @@
 
 void editor_launch();
 
+int editor_draw();
+int editor_update();
 #endif
