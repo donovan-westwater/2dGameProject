@@ -12,14 +12,14 @@
 #include "obsticle.h"
 #include "gui.h"
 #include "delivery.h"
-
+#include "editor.h"
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
     int done = 0;
     const Uint8 * keys;
     Sprite *sprite;
-    
+	int editorMode = 0;
 	
 
     int mx,my;
@@ -98,7 +98,11 @@ int main(int argc, char * argv[])
 	//Playing around with static shapes to figure out how to level
 	//Shape wall = shape_rect(500,200,100,50); 
 	//space_add_static_shape(space, wall);
-
+	editorMode = 1;
+	if (editorMode){
+		SDL_ShowCursor(SDL_ENABLE);
+		editor_launch();
+	}
 	/*main game loop*/
     while(!done)
     {
@@ -136,7 +140,7 @@ int main(int argc, char * argv[])
 		}
 
           
-		   
+		if (!editorMode){
 		   entity_think_all();
 			//Physics update (put into level update)
 		  // entity_pre_sync_all();
@@ -148,7 +152,15 @@ int main(int argc, char * argv[])
 
             //UI elements last
 			//space_draw(level_get_space(), vector2d(0, 0)); //put into level draw
-			level_draw();
+			
+		}
+		else{
+			space_update(level_get_space());
+			editor_update();
+			
+		}
+		level_draw();
+		if (editorMode) editor_draw();
 			gui_draw_hud();
             gf2d_sprite_draw(
                 mouse,

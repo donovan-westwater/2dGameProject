@@ -538,6 +538,9 @@ void level_update(){
 	entity_post_sync_all();
 }
 
+Level *level_get_level(){
+	return &gamelevel;
+}
 
 void level_transition(char *filename, Vector2D pos){
 	Entity *player;
