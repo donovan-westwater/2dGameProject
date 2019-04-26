@@ -70,7 +70,8 @@ int editor_is_in_list(){
 Shape *editor_delete_tile(Shape *other, Shape *out){
 	if (editorData.currentTile.x == other->s.r.x  && editorData.currentTile.y == other->s.r.y){
 		list_delete_data(level_get_space()->staticShapes, other);
-		wall_kill(editorData.currentTile);
+		wall_kill(vector2d(other->s.r.x,other->s.r.y));
+		level_wall_delete(vector2d(other->s.r.x, other->s.r.y), "levels/editorTest.txt");
 		return out;
 	}
 	//out = NULL;
@@ -91,12 +92,14 @@ int editor_update() //Window *win, List *updateList
 		//wall_spawn();
 		//slog("Button is pressed!");
 		list_foreach(level_get_space()->staticShapes, editor_delete_tile, out);
+		
 	//	if (out != NULL) list_delete_data(level_get_space()->staticShapes, out);
 		//call a foreach for the static shapes 
 		
 	}
 	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)){
 		if (!editor_is_in_list()){
+			level_wall_save(editorData.currentTile, "levels/editorTest.txt"); //Need to create a filename infomation chain
 			wall_spawn(editorData.currentTile.x, editorData.currentTile.y, editorData.tilesize.x, editorData.tilesize.y);
 		}
 		
