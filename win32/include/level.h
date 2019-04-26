@@ -110,9 +110,13 @@ int body_body_touch(Body *self, List *collisionList);
 * @param name of the route
 */
 void route_load(char *name);
-
+/**
+* @brief saves the current postion of the player to save file
+*/
 void save_game();
-
+/**
+* @brief Loads the current player location saved to save file
+*/
 void load_game();
 
 Entity *wall_spawn(double x, double y, double w, double h);
@@ -122,4 +126,7 @@ void *wall_kill(Vector2D position);
 void level_wall_save(Vector2D pos, char *filename);
 
 void level_wall_delete(Vector2D pos, char *filename);
+
+void level_delivery_save(Vector2D pos, char *filename);
+
 #endif

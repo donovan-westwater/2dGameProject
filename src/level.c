@@ -617,6 +617,7 @@ void level_wall_save(Vector2D pos, char *filename){
 	fprintf(write,out);
 	fclose(write);
 }
+//Deletes any line containing the speafied postion, deleting the walll (or anything for that matter) from save data
 void level_wall_delete(Vector2D pos, char *filename){
 	//Run through the overworld file and match the position to the line or section with the corresponding postion
 	FILE *fp1, *fp2;
@@ -721,4 +722,29 @@ void level_wall_delete(Vector2D pos, char *filename){
 	}
 	fclose(fp1);
 	return 0;
+}
+void level_delivery_save(Vector2D pos, char *filename){
+	FILE *write;
+	write = fopen(filename, "a");
+	if (write == NULL) {
+		perror("cannot open file");
+		return 1;
+	}
+	//char type[32] = "\nwall |";
+//	char newLine[10] = "";
+	char position[256] = { 0x0 };
+	//char param[256] = " 200,200|";
+	char tmp[32] = { 0x0 };
+	char out[256] = { 0x0 };
+	itoa(pos.x, tmp, 10);
+	strcat(position, tmp);
+	strcat(position, ",");
+	itoa(pos.y, tmp, 10);
+	strcat(position, tmp);
+	strcat(position, "|\n");
+//	strcat(out, newLine);
+	strcat(out, position);
+	//strcat(out, param);
+	fprintf(write, out);
+	fclose(write);
 }

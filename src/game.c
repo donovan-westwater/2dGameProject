@@ -67,6 +67,7 @@ int main(int argc, char * argv[])
 	//linfo = level_info_load("levels/section1.txt");// Test overworld
 	//level_wall_delete(vector2d(1, 1), "levels/editorTest.txt");
 	//level_wall_save(vector2d(310, 1), "levels/editorTest.txt");
+	level_delivery_save(vector2d(200, 400), "levels/route1.txt");
 	linfo = level_info_load("levels/editorTest.txt");
 	//Vector2D* check = (Vector2D *)list_get_nth(linfo->shapeLocations, 0);
 	//slog("%lf",check.x);
