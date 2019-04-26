@@ -442,6 +442,16 @@ Entity *wall_spawn(double x, double y, double w, double h){
 	space_add_static_shape(level_get_space(), self->shape);
 	return self;
 }
+void *wall_kill(Vector2D position){
+	for (int i = 0; i < list_get_count(get_entityList()); i++)
+	{
+		Shape *other = list_get_nth(get_entityList(), i);
+		if (other->s.r.x == position.x && other->s.r.y == position.y){
+			entity_free(other);
+		}
+	}
+	
+}
 void level_init(LevelInfo *linfo, Uint8 space){
 	if (!linfo)
 	{

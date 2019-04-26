@@ -53,12 +53,24 @@ void editor_new_map(void *data)
 	level_init(editorData.level, 0);
 }
 */
+int editor_is_in_list(){
+	Shape in = shape_rect(editorData.currentTile.x, editorData.currentTile.y, editorData.tilesize.x, editorData.tilesize.y);
+	Shape *current = &in;
+	for (int i = 0; i < list_get_count(level_get_space()->staticShapes); i++)
+	{
+		Shape *other = list_get_nth(level_get_space()->staticShapes, i);
+		if (other->s.r.x == current->s.r.x && other->s.r.y == current->s.r.y){
+			return 1;
+		}
+	}
+	return 0;
+}
 
 
-
-Shape *editor_check_tile(Shape *other, Shape *out){
+Shape *editor_delete_tile(Shape *other, Shape *out){
 	if (editorData.currentTile.x == other->s.r.x  && editorData.currentTile.y == other->s.r.y){
-		out = other;
+		list_delete_data(level_get_space()->staticShapes, other);
+		wall_kill(editorData.currentTile);
 		return out;
 	}
 	//out = NULL;
@@ -74,28 +86,41 @@ int editor_update() //Window *win, List *updateList
 	int tileY = (int)my;
 	Shape *out = NULL;
 	Vector2D check = vector2d((double)tileX, (double)tileY);
-	//Detects if the left mouse button has been pressed
+	//Detects if the right mouse button has been pressed
 	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)){
 		//wall_spawn();
-		slog("Button is pressed!");
-		list_foreach(level_get_space()->staticShapes, editor_check_tile, out);
-		if (out != NULL) list_delete_data(level_get_space()->staticShapes, out);
+		//slog("Button is pressed!");
+		list_foreach(level_get_space()->staticShapes, editor_delete_tile, out);
+	//	if (out != NULL) list_delete_data(level_get_space()->staticShapes, out);
 		//call a foreach for the static shapes 
 		
 	}
+	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)){
+		if (!editor_is_in_list()){
+			wall_spawn(editorData.currentTile.x, editorData.currentTile.y, editorData.tilesize.x, editorData.tilesize.y);
+		}
+		
+		//slog("Button is pressed!");
+		//list_foreach(level_get_space()->staticShapes, editor_check_tile, out);
+		//	if (out != NULL) list_delete_data(level_get_space()->staticShapes, out);
+		//call a foreach for the static shapes 
 
-	if (tileX > editorData.currentTile.x+200){
-		editorData.currentTile.x += 200;
 	}
-	if (tileY > editorData.currentTile.y + 200){
-		editorData.currentTile.y += 200;
+
+	if (tileX > editorData.currentTile.x ){
+		editorData.currentTile.x += editorData.tilesize.x;
 	}
-	if (tileX < editorData.currentTile.x - 200){
-		editorData.currentTile.x -= 200;
+	if (tileY > editorData.currentTile.y ){
+		editorData.currentTile.y += editorData.tilesize.y;
 	}
-	if (tileY < editorData.currentTile.y - 200){
-		editorData.currentTile.y -= 200;
+	if (tileX < editorData.currentTile.x ){
+		editorData.currentTile.x -= editorData.tilesize.x;
 	}
+	if (tileY < editorData.currentTile.y ){
+		editorData.currentTile.y -= editorData.tilesize.y;
+	}
+	slog("%lf %lf", editorData.currentTile.x, editorData.currentTile.y);
+//	slog("%d %d", tileX, tileY);
 	//TEMP
 	if (mx > (camera_get_position().x + camera_get_dimensions().w)){
 		camera_move(vector2d(camera_get_dimensions().w, 0));
