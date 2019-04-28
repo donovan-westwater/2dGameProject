@@ -14,6 +14,7 @@ typedef struct EditorData_S
 	LevelInfo *level;       /**<working level*/
 	Vector2D currentTile;
 	Vector2D tilesize;
+	int timer;
 }EditorData;
 
 EditorData editorData = { 0 };
@@ -82,7 +83,16 @@ int editor_update() //Window *win, List *updateList
 {
 	int mx, my;
 	Uint32 mouse;
+	Uint8 * keys;	
+	if(editorData.timer < 101) editorData.timer += 1;
+	else
+	{
+		editorData.timer = 0;
+	}
 	mouse = SDL_GetMouseState(&mx, &my);
+	keys = SDL_GetKeyboardState(NULL);
+	mx += camera_get_position().x;
+	my += camera_get_position().y;
 	int tileX = (int)mx;
 	int tileY = (int)my;
 	Shape *out = NULL;
@@ -110,6 +120,18 @@ int editor_update() //Window *win, List *updateList
 
 	}
 
+	if (keys[SDL_SCANCODE_W] ) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y - 1));
+	if (keys[SDL_SCANCODE_S] ) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y + 1));
+	if (keys[SDL_SCANCODE_A] ) camera_set_position(vector2d(camera_get_position().x - 1, camera_get_position().y));
+	if (keys[SDL_SCANCODE_D] ) camera_set_position(vector2d(camera_get_position().x + 1, camera_get_position().y));
+
+	if (keys[SDL_SCANCODE_UP] && editorData.timer % 15 == 0) camera_move(vector2d(0, -camera_get_dimensions().h));
+	if (keys[SDL_SCANCODE_DOWN] && editorData.timer % 15 == 0) camera_move(vector2d(0, camera_get_dimensions().h));
+	if (keys[SDL_SCANCODE_LEFT] && editorData.timer % 15 == 0) camera_move(vector2d(-camera_get_dimensions().w, 0));
+	if (keys[SDL_SCANCODE_RIGHT] && editorData.timer % 15 == 0) camera_move(vector2d(camera_get_dimensions().w, 0));
+	
+	slog("CAMERA: %lf %lf",camera_get_position().x,camera_get_position().y);
+	
 	if (tileX > editorData.currentTile.x ){
 		editorData.currentTile.x += editorData.tilesize.x;
 	}
@@ -122,21 +144,7 @@ int editor_update() //Window *win, List *updateList
 	if (tileY < editorData.currentTile.y ){
 		editorData.currentTile.y -= editorData.tilesize.y;
 	}
-	slog("%lf %lf", editorData.currentTile.x, editorData.currentTile.y);
-//	slog("%d %d", tileX, tileY);
-	//TEMP
-	if (mx > (camera_get_position().x + camera_get_dimensions().w)){
-		camera_move(vector2d(camera_get_dimensions().w, 0));
-	}
-	if (my > (camera_get_position().y + camera_get_dimensions().h)){
-		camera_move(vector2d(0, camera_get_dimensions().h));
-	}
-	if (mx < (camera_get_position().x)){
-		camera_move(vector2d(-camera_get_dimensions().w, 0));
-	}
-	if (my < (camera_get_position().y)){
-		camera_move(vector2d(0, -camera_get_dimensions().h));
-	}
+	
 	/*
 	int i, count;
 	Element *e;
@@ -184,6 +192,7 @@ int editor_update() //Window *win, List *updateList
 //Not being used! WIP
 void editor_launch()
 {
+	editorData.timer = 0;
 	editorData.tilesize = vector2d(200, 200);
 	editorData.currentTile = vector2d(0, 0);
 	/*

@@ -43,7 +43,7 @@ int main(int argc, char * argv[])
         0); //Window size is 1200 x 720
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
-	entity_system_init(32);
+	entity_system_init(200);
 
 	camera_set_dimensions(0, 0, 1200, 720); //1/2 * bounds.x, 1/3 * bounds.y
 	gui_setup_hud();
@@ -67,7 +67,7 @@ int main(int argc, char * argv[])
 	//linfo = level_info_load("levels/section1.txt");// Test overworld
 	//level_wall_delete(vector2d(1, 1), "levels/editorTest.txt");
 	//level_wall_save(vector2d(310, 1), "levels/editorTest.txt");
-	level_delivery_save(vector2d(200, 400), "levels/route1.txt");
+	//level_delivery_save(vector2d(200, 400), "levels/route1.txt");
 	linfo = level_info_load("levels/editorTest.txt");
 	//Vector2D* check = (Vector2D *)list_get_nth(linfo->shapeLocations, 0);
 	//slog("%lf",check.x);

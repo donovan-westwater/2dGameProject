@@ -137,7 +137,7 @@ LevelInfo *level_info_load(char *filename){
 						slog("List allocated");
 					}
 					slog(" Trying to appending data");
-					list_append(out->shapeParams, data);
+					out->shapeParams = list_append(out->shapeParams, data);
 					x = 0;
 					y = 0;
 					numbers = "";
