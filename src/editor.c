@@ -73,7 +73,7 @@ Shape *editor_delete_tile(Shape *other, Shape *out){
 		list_delete_data(level_get_space()->staticShapes, other);
 		wall_kill(vector2d(other->s.r.x,other->s.r.y));
 		level_wall_delete(vector2d(other->s.r.x, other->s.r.y), "levels/editorTest.txt");
-	//	level_wall_delete(vector2d(other->s.r.x, other->s.r.y), "levels/route1.txt");
+		level_wall_delete(vector2d(other->s.r.x, other->s.r.y), "levels/route1.txt");
 		return out;
 	}
 	//out = NULL;

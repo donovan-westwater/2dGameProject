@@ -442,11 +442,13 @@ Entity *wall_spawn(double x, double y, double w, double h){
 	space_add_static_shape(level_get_space(), self->shape);
 	return self;
 }
+//should kill the entity assoicated with walls, delivery points,  or obsticles
 void *wall_kill(Vector2D position){
-	for (int i = 0; i < list_get_count(get_entityList()); i++)
+	Entity *entList = get_entityList();
+	for (int i = 0; i < get_maxEntites(); i++)
 	{
-		Shape *other = list_get_nth(get_entityList(), i);
-		if (other->s.r.x == position.x && other->s.r.y == position.y){
+		Entity *other = &entList[i];
+		if (other->position.x == position.x && other->position.y == position.y){
 			entity_free(other);
 		}
 	}
