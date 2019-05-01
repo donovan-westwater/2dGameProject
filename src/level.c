@@ -506,7 +506,7 @@ void level_init(LevelInfo *linfo, Uint8 space){
 void create_space(){
 	gamelevel.space = space_new_full(
 		15,
-		shape_rect(0, 0, 4800, 2880).s.r, //2400 2400
+		shape_rect(0, 0, 4800, 2880).s.r, //2400 2400 INCREASE THE SIZE OF THE SPACE, SHOULD BE MULTIPLES OF 200
 		0.1,
 		vector2d(0, 0),
 		0.0,
@@ -651,22 +651,29 @@ void level_wall_delete(Vector2D pos, char *filename){
 
 	//until the last character of file is obtained
 	last = '\n';
-	lineno = 0;
+	lineno = 1;
 	while ((c = fgets(tmp, sizeof(tmp), fp1))) {
+		if (strstr(tmp, delWord))
+			del_line = lineno;
+		//print current character and read next character
+		putchar(c);
+		lineno += 1;
+		/*
 		if (last == '\n') {
-			printf("%4d: ", ++lineno);
+			printf("%d: ", ++lineno);
 		}
 		if (strstr(tmp, delWord))
 			del_line = lineno;
 		//print current character and read next character
 		putchar(c);
 		last = c;
+		*/
 	}
 
 	rewind(fp1);
 	if (del_line < 1 || del_line > lineno) {
-		//printf("no such line: %d\n", del_line);
-		//return 1;
+		printf("no such line: %d\n", del_line);
+		return 1;
 	}
 
 	//open new file in write mode
@@ -704,11 +711,16 @@ void level_wall_delete(Vector2D pos, char *filename){
 
 	//rename the file copy.c to original name
 
+	if (rename("levels/copy.txt", filename)) {
+		perror("cannot rename file");
+		return 1;
+	}
+	/*
 	if (rename("levels/copy.txt", "levels/editorTest.txt")) {
 		perror("cannot rename file");
 		return 1;
 	}
-
+	*/
 	printf("\nThe contents of file after being modified are as  follows:\n");
 
 	fp1 = fopen(filename, "r");

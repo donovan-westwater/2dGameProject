@@ -5,7 +5,7 @@
 #include "camera.h"
 #include "shape.h"
 #include "simple_logger.h"
-
+#include "delivery.h"
 
 
 typedef struct EditorData_S
@@ -67,12 +67,13 @@ int editor_is_in_list(){
 	return 0;
 }
 
-
+//WALL DELETE NEEDS TO BE FIXED! DELETES THE LINE ABOVE ITSELF INSTEAD OF THE LINE ITS ON! NOT DETECTING LINES PROPERLY!
 Shape *editor_delete_tile(Shape *other, Shape *out){
 	if (editorData.currentTile.x == other->s.r.x  && editorData.currentTile.y == other->s.r.y){
 		list_delete_data(level_get_space()->staticShapes, other);
 		wall_kill(vector2d(other->s.r.x,other->s.r.y));
 		level_wall_delete(vector2d(other->s.r.x, other->s.r.y), "levels/editorTest.txt");
+	//	level_wall_delete(vector2d(other->s.r.x, other->s.r.y), "levels/route1.txt");
 		return out;
 	}
 	//out = NULL;
@@ -119,7 +120,10 @@ int editor_update() //Window *win, List *updateList
 		//call a foreach for the static shapes 
 
 	}
-
+	if (keys[SDL_SCANCODE_O]){
+		level_delivery_save(editorData.currentTile, "levels/route1.txt");
+		delivery_spawn(editorData.currentTile);
+	}
 	if (keys[SDL_SCANCODE_W] ) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y - 1));
 	if (keys[SDL_SCANCODE_S] ) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y + 1));
 	if (keys[SDL_SCANCODE_A] ) camera_set_position(vector2d(camera_get_position().x - 1, camera_get_position().y));
@@ -130,7 +134,7 @@ int editor_update() //Window *win, List *updateList
 	if (keys[SDL_SCANCODE_LEFT] && editorData.timer % 15 == 0) camera_move(vector2d(-camera_get_dimensions().w, 0));
 	if (keys[SDL_SCANCODE_RIGHT] && editorData.timer % 15 == 0) camera_move(vector2d(camera_get_dimensions().w, 0));
 	
-	slog("CAMERA: %lf %lf",camera_get_position().x,camera_get_position().y);
+	//slog("CAMERA: %lf %lf",camera_get_position().x,camera_get_position().y);
 	
 	if (tileX > editorData.currentTile.x ){
 		editorData.currentTile.x += editorData.tilesize.x;
@@ -144,7 +148,7 @@ int editor_update() //Window *win, List *updateList
 	if (tileY < editorData.currentTile.y ){
 		editorData.currentTile.y -= editorData.tilesize.y;
 	}
-	
+	//slog("Current Tile: %lf %lf", editorData.currentTile.x, editorData.currentTile.y);
 	/*
 	int i, count;
 	Element *e;
