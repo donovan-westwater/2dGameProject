@@ -71,7 +71,7 @@ int editor_is_in_list(){
 Shape *editor_delete_tile(Shape *other, Shape *out){
 	if (editorData.currentTile.x == other->s.r.x  && editorData.currentTile.y == other->s.r.y){
 		list_delete_data(level_get_space()->staticShapes, other);
-		wall_kill(vector2d(other->s.r.x,other->s.r.y));
+		level_wall_kill(vector2d(other->s.r.x,other->s.r.y));
 		level_wall_delete(vector2d(other->s.r.x, other->s.r.y), "levels/editorTest.txt");
 		level_wall_delete(vector2d(other->s.r.x, other->s.r.y), "levels/route1.txt");
 		return out;
@@ -120,7 +120,7 @@ int editor_update() //Window *win, List *updateList
 		//call a foreach for the static shapes 
 
 	}
-	if (keys[SDL_SCANCODE_O]){
+	if (keys[SDL_SCANCODE_O] && !editor_is_in_list()){
 		level_delivery_save(editorData.currentTile, "levels/route1.txt");
 		delivery_spawn(editorData.currentTile);
 	}

@@ -443,7 +443,8 @@ Entity *wall_spawn(double x, double y, double w, double h){
 	return self;
 }
 //should kill the entity assoicated with walls, delivery points,  or obsticles
-void *wall_kill(Vector2D position){
+//Add a null check! this function is unsafe!!!!!!!
+void *level_wall_kill(Vector2D position){
 	Entity *entList = get_entityList();
 	for (int i = 0; i < get_maxEntites(); i++)
 	{
