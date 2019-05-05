@@ -43,9 +43,9 @@ int main(int argc, char * argv[])
         0); //Window size is 1200 x 720
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
-	entity_system_init(200);
+	entity_system_init(1024);
 
-	camera_set_dimensions(0, 0, 1200, 720); //1/2 * bounds.x, 1/3 * bounds.y
+	camera_set_dimensions(0, 0, 1200, 600); //1/2 * bounds.x, 1/3 * bounds.y
 	gui_setup_hud();
 	camera_set_bounds(0, 0,9600, 9600);
     SDL_ShowCursor(SDL_DISABLE);
@@ -119,6 +119,9 @@ int main(int argc, char * argv[])
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
 		gf2d_sprite_draw_image(sprite, vector2d(0, 0));
+		if (keys[SDL_SCANCODE_M] && (int)mf % 16 == 0){
+			editorMode = !editorMode;
+		}
 		if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
 		//WIP
 		if (level_get_lose()){

@@ -510,7 +510,7 @@ void level_init(LevelInfo *linfo, Uint8 space){
 void create_space(){
 	gamelevel.space = space_new_full(
 		15,
-		shape_rect(0, 0, 4800, 2880).s.r, //2400 2400 INCREASE THE SIZE OF THE SPACE, SHOULD BE MULTIPLES OF 200
+		shape_rect(0, 0, 9600, 9600).s.r, //2400 2400 INCREASE THE SIZE OF THE SPACE, SHOULD BE MULTIPLES OF 200 [OGI:4800, 2800]
 		0.1,
 		vector2d(0, 0),
 		0.0,
