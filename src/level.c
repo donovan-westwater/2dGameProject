@@ -481,7 +481,8 @@ void level_init(LevelInfo *linfo, Uint8 space){
 			//Have fucntions here to tie shape to a static entity to represent the wall
 			}
 		}
-		//Monster and obstcle calls go here
+		//Monster and obstcle calls go here 
+		//CHANGE SHOOTER PATEROLLER TO USE PARAMS BY EDITING OUTPUTED ENTITY!!!! (Save spawn in a variable and change param that way) [HUGE WORKLOAD IF UNDERTOOK, WOULD CREATE REDOING LEVEL READ SYSTEM, SO AVOID FOR NOW]
 	for (int z = 0;z < list_get_count(linfo->spawnLocations); z++){
 		Vector2D *loc = (Vector2D *)list_get_nth(linfo->spawnLocations, z);
 		char *type = (char *)list_get_nth(linfo->spawnList, z);
@@ -633,11 +634,13 @@ void level_wall_delete(Vector2D pos, char *filename){
 	
 	//asks user for file name
 	//printf("Enter file name: ");
+	strcat(delWord, "|");
 	itoa(pos.x, tmp, 10);
 	strcat(delWord, tmp);
 	strcat(delWord, ",");
 	itoa(pos.y, tmp, 10);
 	strcat(delWord, tmp);
+	strcat(delWord, "|");
 	strcpy(tmp, "");
 	///receives file name from user and stores in 'filename'
 	/*if (scanf("%255s", filename) != 1) {
@@ -656,8 +659,9 @@ void level_wall_delete(Vector2D pos, char *filename){
 	last = '\n';
 	lineno = 1;
 	while ((c = fgets(tmp, sizeof(tmp), fp1))) {
-		if (strstr(tmp, delWord))
+		if (strstr(tmp, delWord)){
 			del_line = lineno;
+		}
 		//print current character and read next character
 		putchar(c);
 		lineno += 1;
@@ -760,6 +764,59 @@ void level_delivery_save(Vector2D pos, char *filename){
 //	strcat(out, newLine);
 	strcat(out, position);
 	//strcat(out, param);
+	fprintf(write, out);
+	fclose(write);
+}
+
+void level_entity_save(Vector2D pos, char* entityType, char *filename){
+	FILE *write;
+	write = fopen(filename, "a");
+	if (write == NULL) {
+		perror("cannot open file");
+		return 1;
+	}
+	//Type
+	char type[32];
+	if (strcmp(entityType, "shooter") == 0 || strcmp(entityType, "patroller") == 0 || strcmp(entityType, "chaser") == 0){
+		strcpy(type, "monster ");
+	}
+	else{
+		strcpy(type, "obsticle ");
+	}
+	char position[256] = { 0x0 };
+	//char param[256] = { 0x0 };
+	char tmp[256] = { 0x0 };
+	char out[256] = { 0x0 };
+	strcat(tmp, "\n");
+	strcat(tmp, type);
+	strcat(out,tmp);
+	strcat(out, "|");
+	strcpy(tmp, "");
+	//Position
+	itoa(pos.x, tmp, 10);
+	strcat(position, tmp);
+	strcat(position, ",");
+	itoa(pos.y, tmp, 10);
+	strcat(position, tmp);
+	strcat(position, "|");
+	strcat(out, position);
+	strcpy(tmp, "");
+	//Entity Type
+	strcat(out, " ");
+	strcat(tmp, tolower(entityType));
+	strcat(out, tmp);
+	strcat(out, "|");
+	//Param  
+	/*
+	itoa(param.x, tmp, 10);
+	strcat(position, tmp);
+	strcat(position, ",");
+	itoa(param.y, tmp, 10);
+	strcat(position, tmp);
+	strcat(position, "|");
+	strcpy(tmp, "");
+	fclose(write);
+	*/
 	fprintf(write, out);
 	fclose(write);
 }

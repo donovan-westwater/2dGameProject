@@ -118,15 +118,34 @@ void save_game();
 * @brief Loads the current player location saved to save file
 */
 void load_game();
-
+/**
+* @brief creates a static shape with an entity assoicated with it
+* @param doubles for x pos, y pos, w pos, h pos
+*/
 Entity *wall_spawn(double x, double y, double w, double h);
-
+/**
+* @brief entity assoicated with static shape is deleted
+* @param Vector2D the postion of where the the shape you want to delete is
+*/
 void *level_wall_kill(Vector2D position);
-
+/**
+* @brief Saves the static shape paramaters onto a file
+* @param Vector2D the postion you want saved, and the file you want saved to
+*/
 void level_wall_save(Vector2D pos, char *filename);
-
+/**
+* @brief Deletes the static shape paramaters saved onto a file
+* @param Vector2D the postion you want deleted, and the file you want deleted from
+*/
 void level_wall_delete(Vector2D pos, char *filename);
-
+/**
+* @brief Saves a delievery point to a file
+* @param Vector2D the postion you want saved, and the route you want saved to
+*/
 void level_delivery_save(Vector2D pos, char *filename);
-
+/**
+* @brief Saves the entity paramaters onto a file
+* @param Vector2D the postion you want saved, name of the entity type desired, and the file you want saved to
+*/
+void level_entity_save(Vector2D pos,char* entityType ,char *filename);
 #endif

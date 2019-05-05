@@ -6,7 +6,8 @@
 #include "shape.h"
 #include "simple_logger.h"
 #include "delivery.h"
-
+#include "monster.h"
+#include "obsticle.h"
 
 typedef struct EditorData_S
 {
@@ -64,10 +65,33 @@ int editor_is_in_list(){
 			return 1;
 		}
 	}
+	//Entity Body detection should go here
+	Entity *entList = get_entityList();
+	for (int i = 0; i < get_maxEntites(); i++)
+	{
+		Entity *other = &entList[i];
+		if (other->position.x == editorData.currentTile.x && other->position.y == editorData.currentTile.y){
+			return 1;
+		}
+	}
+
+
 	return 0;
 }
+//deletes any entity found on current Tile from world file and world proper
+void *editor_delete_entity(){
+	Entity *entList = get_entityList();
+	for (int i = 0; i < get_maxEntites(); i++)
+	{
+		Entity *other = &entList[i];
+		if (other->position.x == editorData.currentTile.x && other->position.y == editorData.currentTile.y){
+			level_wall_delete(other->position,"levels/editorTest.txt");
+			level_wall_kill(other->position);
+			return;
+		}
+	}
+}
 
-//WALL DELETE NEEDS TO BE FIXED! DELETES THE LINE ABOVE ITSELF INSTEAD OF THE LINE ITS ON! NOT DETECTING LINES PROPERLY!
 Shape *editor_delete_tile(Shape *other, Shape *out){
 	if (editorData.currentTile.x == other->s.r.x  && editorData.currentTile.y == other->s.r.y){
 		list_delete_data(level_get_space()->staticShapes, other);
@@ -79,8 +103,8 @@ Shape *editor_delete_tile(Shape *other, Shape *out){
 	//out = NULL;
 	return NULL;
 }
-//WIP - needed!
-int editor_update() //Window *win, List *updateList
+
+int editor_update() 
 {
 	int mx, my;
 	Uint32 mouse;
@@ -103,9 +127,11 @@ int editor_update() //Window *win, List *updateList
 		//wall_spawn();
 		//slog("Button is pressed!");
 		list_foreach(level_get_space()->staticShapes, editor_delete_tile, out);
+		editor_delete_entity(); 
+		//level_wall_kill(editorData.currentTile);
+		//Deleting entity, use normal for loop setup
 		
-	//	if (out != NULL) list_delete_data(level_get_space()->staticShapes, out);
-		//call a foreach for the static shapes 
+	
 		
 	}
 	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)){
@@ -114,15 +140,41 @@ int editor_update() //Window *win, List *updateList
 			wall_spawn(editorData.currentTile.x, editorData.currentTile.y, editorData.tilesize.x, editorData.tilesize.y);
 		}
 		
-		//slog("Button is pressed!");
-		//list_foreach(level_get_space()->staticShapes, editor_check_tile, out);
-		//	if (out != NULL) list_delete_data(level_get_space()->staticShapes, out);
-		//call a foreach for the static shapes 
 
-	}
+	}//delivery points
 	if (keys[SDL_SCANCODE_O] && !editor_is_in_list()){
 		level_delivery_save(editorData.currentTile, "levels/route1.txt");
 		delivery_spawn(editorData.currentTile);
+	}
+	//Chasers
+	if (keys[SDL_SCANCODE_I] && !editor_is_in_list()){
+		
+		level_entity_save(editorData.currentTile,"chaser","levels/editorTest.txt");
+		monster_spawn(editorData.currentTile,CHASER);
+	}
+	//Patrollers [Have a directional editor]
+	if (keys[SDL_SCANCODE_U] && !editor_is_in_list()){
+	
+		level_entity_save(editorData.currentTile, "patroller", "levels/editorTest.txt");
+		monster_spawn(editorData.currentTile, PATROLLER);
+	}
+	//Shooters  [Have a directional editor]
+	if (keys[SDL_SCANCODE_Y] && !editor_is_in_list()){
+		
+		level_entity_save(editorData.currentTile, "shooter", "levels/editorTest.txt");
+		monster_spawn(editorData.currentTile, SHOOTER);
+	}
+	//Flinger  (Black hole)
+	if (keys[SDL_SCANCODE_T] && !editor_is_in_list()){
+		
+		level_entity_save(editorData.currentTile, "flinger", "levels/editorTest.txt");
+		obsticle_spawn(editorData.currentTile, FLINGER);
+	}
+	//Block    (RoadBlock)
+	if (keys[SDL_SCANCODE_P] && !editor_is_in_list()){
+		
+		level_entity_save(editorData.currentTile, "block", "levels/editorTest.txt");
+		obsticle_spawn(editorData.currentTile, BLOCK);
 	}
 	if (keys[SDL_SCANCODE_W] ) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y - 1));
 	if (keys[SDL_SCANCODE_S] ) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y + 1));
