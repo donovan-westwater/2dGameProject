@@ -16,6 +16,8 @@ typedef struct{
 	Space *space;
 	int win;
 	int lose;
+	char *worldname;
+	int currentRoute;
 }Level;
 //First create a level_inti fucntion, then a  load level fucntion, then level clear,then level update, then level draw
 
@@ -44,6 +46,9 @@ LevelInfo *level_info_load(char *filename){
 		return NULL;
 	}
 	slog(" File Opened! ");
+	out->file = filename;
+	//gamelevel.worldname = (char *)malloc(filename);
+	//strcpy(gamelevel.worldname, filename);
 	char* names = "";
 	char* numbers = "";
 	char* other = "";
@@ -297,8 +302,8 @@ void route_load(char *name){
 	slog(" File Opened! ");
 	char* numbers = "";
 	int skip = 0; // Skips a line
-	double x = 0;
-	double y = 0;
+	double x = -1;
+	double y = -1;
 	char c = 'N'; //A dummy char. Shouldnt acutally be N
 	while (c != EOF){
 		//read input and gather data
@@ -308,18 +313,18 @@ void route_load(char *name){
 		if (c == '\n'){
 			numbers = "";
 			skip = 0;
-			x = 0;
-			y = 0;
+			x = -1;
+			y = -1;
 			continue;
 		}
 		if (c == ' ') continue;
-		if (c == '|'){
+		if (c == '|' && x > -1){
 			//spawn the delivery points
 			int round = (int)atof(numbers);
 			y = round;
-			delivery_spawn(vector2d(x, y));
-			x = 0;
-			y = 0;
+			if(y > -1) delivery_spawn(vector2d(x, y));
+			x = -1;
+			y = -1;
 			numbers = "";
 		
 		}else{
@@ -461,6 +466,7 @@ void level_init(LevelInfo *linfo, Uint8 space){
 		return;
 	}
 	level_clear();
+	gamelevel.worldname = linfo->file;
 	slog("trying to add space!");
 	if (space) create_space();
 	//Should load up infomation from LevelInfo here! (SHOULD CHECK IF PARAMS AND LOC ARE THE SAME AMOUNT)
@@ -561,7 +567,7 @@ void level_transition(char *filename, Vector2D pos){
 	LevelInfo *linfo = NULL;
 
 
-	linfo = level_info_load("levels/section1.txt");
+	linfo = level_info_load(gamelevel.worldname);
 	if (!linfo)return;
 
 	entity_clear_all_but_player();

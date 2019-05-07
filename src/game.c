@@ -99,7 +99,7 @@ int main(int argc, char * argv[])
 	//Playing around with static shapes to figure out how to level
 	//Shape wall = shape_rect(500,200,100,50); 
 	//space_add_static_shape(space, wall);
-	editorMode = 1;
+	//editorMode = 1;
 	if (editorMode){
 		SDL_ShowCursor(SDL_ENABLE);
 		editor_launch();
@@ -119,14 +119,16 @@ int main(int argc, char * argv[])
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
 		gf2d_sprite_draw_image(sprite, vector2d(0, 0));
-		if (keys[SDL_SCANCODE_M] && (int)mf % 16 == 0){
+		if (keys[SDL_SCANCODE_M] && (int)mf % 5 == 0){
 			editorMode = !editorMode;
+			SDL_ShowCursor(SDL_ENABLE);
+			editor_launch();
 		}
 		if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
 		//WIP
 		if (level_get_lose()){
 			Vector2D drawPosition;
-			vector2d_add(drawPosition, camera_get_position(), camera_get_offset());
+			vector2d_add(drawPosition, camera_get_position(), camera_get_offset()); //Will return a 0 0 vector
 			Sprite *failure = gf2d_sprite_load_image("images/failure.png");
 			
 			gf2d_sprite_draw_image(failure, drawPosition);
@@ -135,7 +137,7 @@ int main(int argc, char * argv[])
 		//WIP
 		if (level_get_win()){
 			Vector2D drawPosition;
-			vector2d_add(drawPosition, camera_get_position(), camera_get_offset());
+			vector2d_add(drawPosition, camera_get_position(), camera_get_offset()); //Will return a 0 0 vector
 			Sprite *victory = gf2d_sprite_load_image("images/victory.png");
 			
 			gf2d_sprite_draw_image(victory, drawPosition);

@@ -18,7 +18,7 @@
 typedef struct
 {
 	TextLine    backgroundImage;    /**<background image for this level*/ //Might keep
-	TextLine    connectedSections;  /**Sections that are connected to this one  NOT GOING TO BE USED  */
+	char * file;                 /** Name of the file used to load the level info*/
 	List    *spawnList;		    /**Monsters and obsticles to spawn*/
 	List   *spawnLocations;     /**Locations for Monsters and Obsticles to spawn*/
 	List    *shapeLocations;     /**Locations for static shapes*/
