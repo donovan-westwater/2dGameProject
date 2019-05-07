@@ -755,6 +755,7 @@ void level_delivery_save(Vector2D pos, char *filename){
 	//char param[256] = " 200,200|";
 	char tmp[32] = { 0x0 };
 	char out[256] = { 0x0 };
+	strcat(out, "|");
 	itoa(pos.x, tmp, 10);
 	strcat(position, tmp);
 	strcat(position, ",");

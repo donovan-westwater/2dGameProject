@@ -8,10 +8,13 @@
 #include "delivery.h"
 #include "monster.h"
 #include "obsticle.h"
-
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
 typedef struct EditorData_S
 {
-	TextLine filename;
+	char* routename;
+	char* worldname;
 	LevelInfo *level;       /**<working level*/
 	Vector2D currentTile;
 	Vector2D tilesize;
@@ -85,7 +88,7 @@ void *editor_delete_entity(){
 	{
 		Entity *other = &entList[i];
 		if (other->position.x == editorData.currentTile.x && other->position.y == editorData.currentTile.y){
-			level_wall_delete(other->position,"levels/editorTest.txt");
+			level_wall_delete(other->position, editorData.worldname);
 			level_wall_kill(other->position);
 			return;
 		}
@@ -96,8 +99,8 @@ Shape *editor_delete_tile(Shape *other, Shape *out){
 	if (editorData.currentTile.x == other->s.r.x  && editorData.currentTile.y == other->s.r.y){
 		list_delete_data(level_get_space()->staticShapes, other);
 		level_wall_kill(vector2d(other->s.r.x,other->s.r.y));
-		level_wall_delete(vector2d(other->s.r.x, other->s.r.y), "levels/editorTest.txt");
-		level_wall_delete(vector2d(other->s.r.x, other->s.r.y), "levels/route1.txt");
+		level_wall_delete(vector2d(other->s.r.x, other->s.r.y), editorData.worldname);
+		level_wall_delete(vector2d(other->s.r.x, other->s.r.y), editorData.routename);
 		return out;
 	}
 	//out = NULL;
@@ -136,51 +139,84 @@ int editor_update()
 	}
 	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)){
 		if (!editor_is_in_list()){
-			level_wall_save(editorData.currentTile, "levels/editorTest.txt"); //Need to create a filename infomation chain
+			level_wall_save(editorData.currentTile, editorData.worldname); //Need to create a filename infomation chain
 			wall_spawn(editorData.currentTile.x, editorData.currentTile.y, editorData.tilesize.x, editorData.tilesize.y);
 		}
 		
 
 	}//delivery points
 	if (keys[SDL_SCANCODE_O] && !editor_is_in_list()){
-		level_delivery_save(editorData.currentTile, "levels/route1.txt");
+		level_delivery_save(editorData.currentTile, editorData.routename);
 		delivery_spawn(editorData.currentTile);
 	}
 	//Chasers
 	if (keys[SDL_SCANCODE_I] && !editor_is_in_list()){
 		
-		level_entity_save(editorData.currentTile,"chaser","levels/editorTest.txt");
+		level_entity_save(editorData.currentTile, "chaser", editorData.worldname);
 		monster_spawn(editorData.currentTile,CHASER);
 	}
 	//Patrollers [Have a directional editor]
 	if (keys[SDL_SCANCODE_U] && !editor_is_in_list()){
 	
-		level_entity_save(editorData.currentTile, "patroller", "levels/editorTest.txt");
+		level_entity_save(editorData.currentTile, "patroller", editorData.worldname);
 		monster_spawn(editorData.currentTile, PATROLLER);
 	}
 	//Shooters  [Have a directional editor]
 	if (keys[SDL_SCANCODE_Y] && !editor_is_in_list()){
 		
-		level_entity_save(editorData.currentTile, "shooter", "levels/editorTest.txt");
+		level_entity_save(editorData.currentTile, "shooter", editorData.worldname);
 		monster_spawn(editorData.currentTile, SHOOTER);
 	}
 	//Flinger  (Black hole)
 	if (keys[SDL_SCANCODE_T] && !editor_is_in_list()){
 		
-		level_entity_save(editorData.currentTile, "flinger", "levels/editorTest.txt");
+		level_entity_save(editorData.currentTile, "flinger", editorData.worldname);
 		obsticle_spawn(editorData.currentTile, FLINGER);
 	}
 	//Block    (RoadBlock)
 	if (keys[SDL_SCANCODE_P] && !editor_is_in_list()){
 		
-		level_entity_save(editorData.currentTile, "block", "levels/editorTest.txt");
+		level_entity_save(editorData.currentTile, "block", editorData.worldname);
 		obsticle_spawn(editorData.currentTile, BLOCK);
 	}
+	if (keys[SDL_SCANCODE_S] && editorData.timer % 2==0){
+		char newname[128] = { 0x0 };
+		char tmp[16] = { 0x0 };
+		//char* i = 0;
+		strcat(newname, "levels/route");
+		slog("ENTER IN THE ROUTE NUMBER: ");
+		//fgets(tmp);
+
+		fgets(tmp,sizeof(tmp),stdin);
+		for (int i = 0; i < strlen(tmp); i++){
+			if (!isdigit(tmp[i])){
+				tmp[i] = '\0';
+			}
+		}
+		if (tmp != NULL && strlen(tmp) > 0){ 
+			strcat(newname, tmp);
+			strcat(newname, ".txt");
+			slog(newname);
+			editorData.routename = (char *)malloc(strlen(newname)+1);
+			strcpy(editorData.routename, newname);
+			FILE *write;
+			write = fopen(newname, "a");
+			if (write == NULL) {
+				perror("cannot open file");
+			}
+			fclose(write);
+			route_load(newname);
+		}
+		else{
+			slog("There is nothing here");
+		}
+	}
+	/*
 	if (keys[SDL_SCANCODE_W] ) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y - 1));
 	if (keys[SDL_SCANCODE_S] ) camera_set_position(vector2d(camera_get_position().x, camera_get_position().y + 1));
 	if (keys[SDL_SCANCODE_A] ) camera_set_position(vector2d(camera_get_position().x - 1, camera_get_position().y));
 	if (keys[SDL_SCANCODE_D] ) camera_set_position(vector2d(camera_get_position().x + 1, camera_get_position().y));
-
+	*/
 	if (keys[SDL_SCANCODE_UP] && editorData.timer % 15 == 0) camera_move(vector2d(0, -camera_get_dimensions().h));
 	if (keys[SDL_SCANCODE_DOWN] && editorData.timer % 15 == 0) camera_move(vector2d(0, camera_get_dimensions().h));
 	if (keys[SDL_SCANCODE_LEFT] && editorData.timer % 15 == 0) camera_move(vector2d(-camera_get_dimensions().w, 0));
@@ -248,6 +284,8 @@ int editor_update()
 //Not being used! WIP
 void editor_launch()
 {
+	editorData.worldname = "levels/editorTest.txt";
+	editorData.routename = "levels/route1.txt";
 	editorData.timer = 0;
 	editorData.tilesize = vector2d(200, 200);
 	editorData.currentTile = vector2d(0, 0);
