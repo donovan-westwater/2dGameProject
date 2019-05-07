@@ -17,7 +17,7 @@
 */
 typedef struct
 {
-	TextLine    backgroundImage;    /**<background image for this level*/ //Might keep
+	int curRoute;				  /**The route number or which route the player is on*/
 	char * file;                 /** Name of the file used to load the level info*/
 	List    *spawnList;		    /**Monsters and obsticles to spawn*/
 	List   *spawnLocations;     /**Locations for Monsters and Obsticles to spawn*/
@@ -97,9 +97,9 @@ int level_get_lose();
 void create_space();
 /**
 * @brief load up a new game level and move the player into it
-* @param name of the file (I.e name of a route)
+* @param Vector2D of the position of where the player will spawn
 */
-void level_transition(char *filename,Vector2D pos);
+void level_transition(Vector2D pos);
 /**
 * @brief the touch function of the hitbox of entites. Calls the touch functions of thouse that collided with it
 * @param the hitbox of the entity and its list of collisions

@@ -467,6 +467,7 @@ void level_init(LevelInfo *linfo, Uint8 space){
 	}
 	level_clear();
 	gamelevel.worldname = linfo->file;
+	gamelevel.currentRoute = linfo->curRoute;
 	slog("trying to add space!");
 	if (space) create_space();
 	//Should load up infomation from LevelInfo here! (SHOULD CHECK IF PARAMS AND LOC ARE THE SAME AMOUNT)
@@ -562,17 +563,24 @@ Level *level_get_level(){
 	return &gamelevel;
 }
 
-void level_transition(char *filename, Vector2D pos){
+void level_transition(Vector2D pos){
 	Entity *player;
 	LevelInfo *linfo = NULL;
-
-
+	int safefyCheck = 4;
+	char nextroute[128] = { 0x0 };
+	char tmp[16] = { 0x0 };
+	strcat(nextroute, "levels/route");
 	linfo = level_info_load(gamelevel.worldname);
 	if (!linfo)return;
-
+	gamelevel.currentRoute += 1;
+	if (gamelevel.currentRoute > 4) gamelevel.currentRoute = 1;
+	itoa(gamelevel.currentRoute, tmp, 10);
+	strcat(nextroute,tmp);
+	strcat(nextroute, ".txt");
+	linfo->curRoute = gamelevel.currentRoute;
 	entity_clear_all_but_player();
 	level_init(linfo, 1);
-	route_load(filename);
+	route_load(nextroute);
 	
 	player_set_position(pos);
 

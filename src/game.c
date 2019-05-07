@@ -73,6 +73,7 @@ int main(int argc, char * argv[])
 	//slog("%lf",check.x);
 	if (linfo != NULL){
 		load_game();
+		linfo->curRoute = 1;
 		level_init(linfo, 1);
 		route_load("levels/route1.txt");
 		
@@ -141,7 +142,7 @@ int main(int argc, char * argv[])
 			Sprite *victory = gf2d_sprite_load_image("images/victory.png");
 			
 			gf2d_sprite_draw_image(victory, drawPosition);
-			if(keys[SDL_SCANCODE_RETURN])level_transition("levels/route2.txt", vector2d(900, 600));
+			if(keys[SDL_SCANCODE_RETURN])level_transition(vector2d(900, 600));
 			continue;
 		}
 

@@ -214,9 +214,9 @@ void player_update(Entity *self){
 		Vector2D dir = vector2d(x/mag,y/mag);
 		entity_projectile(self,dir);
 	}
-	if (keys[SDL_SCANCODE_O])
+	if (keys[SDL_SCANCODE_O] && self->timer % 25 == 0)
 	{
-		level_transition("levels/route2.txt",vector2d(900,600));
+		level_transition(vector2d(900,600));
 	}
 	//BIKE TRICK [WIP]
 	if (keys[SDL_SCANCODE_LSHIFT])
