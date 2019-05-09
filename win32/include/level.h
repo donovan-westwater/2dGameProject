@@ -5,7 +5,7 @@
 #include "gf2d_sprite.h"
 #include "entity.h"
 #include "List.h"
-
+#include "particles.h"
 
 /**
 * @Purpose game specific level code
@@ -148,4 +148,8 @@ void level_delivery_save(Vector2D pos, char *filename);
 * @param Vector2D the postion you want saved, name of the entity type desired, and the file you want saved to
 */
 void level_entity_save(Vector2D pos,char* entityType ,char *filename);
+/**
+* @brief returns levels particle emitter
+*/
+ParticleEmitter *level_get_particle_emitter();
 #endif

@@ -10,6 +10,7 @@
 #include "body.h"
 #include "collisions.h"
 #include "List.h"
+#include "particle_effects.h"
 //the code sample we made above
 //A bunch of this code comes from dj's project. This is to give me a start and help me understand systems
 //ADD THINK SYSTEM!
@@ -296,10 +297,11 @@ void projectile_update(Entity *self){
 	if (self->frame >= 16.0){
 		self->frame = 0;
 	}
-
-	
+	Vector2D start;
+	vector2d_copy(start, self->position);
 	self->position.x += self->velocity.x;
 	self->position.y += self->velocity.y;
+	particle_trail(start, self->position, gf2d_color(1,1,1,1));
 	self->health--;
 	if (self->health <= 0){
 		self->_inuse = 0;

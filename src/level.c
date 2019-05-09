@@ -11,6 +11,7 @@
 #include "collisions.h"
 #include "simple_logger.h"
 #include "delivery.h"
+#include "particles.h"
 //Level info
 typedef struct{
 	Space *space;
@@ -18,6 +19,7 @@ typedef struct{
 	int lose;
 	char *worldname;
 	int currentRoute;
+	ParticleEmitter *pe;
 }Level;
 //First create a level_inti fucntion, then a  load level fucntion, then level clear,then level update, then level draw
 
@@ -470,6 +472,30 @@ void level_init(LevelInfo *linfo, Uint8 space){
 	gamelevel.currentRoute = linfo->curRoute;
 	slog("trying to add space!");
 	if (space) create_space();
+	gamelevel.pe = gf2d_particle_emitter_new_full(
+		2048,
+		10,
+		5,
+		PT_Pixel,
+		vector2d(0, 0),
+		vector2d(0, 0),
+		vector2d(0, 0),
+		vector2d(0, 0),
+		vector2d(0, 0),
+		vector2d(0, 0),
+		gf2d_color(0, 0, 0, 1),
+		gf2d_color(0, 0, 0, 0),
+		gf2d_color(0, 0, 0, 0),
+		NULL,
+		0,
+		0,
+		0,
+		"",
+		0,
+		0,
+		0,
+		0,
+		SDL_BLENDMODE_BLEND);
 	//Should load up infomation from LevelInfo here! (SHOULD CHECK IF PARAMS AND LOC ARE THE SAME AMOUNT)
 	for (int i = 0; i < list_get_count(linfo->shapeLocations); i++){
 		slog("Size: %d", list_get_count(linfo->shapeLocations));
@@ -526,6 +552,7 @@ void create_space(){
 }
 void level_clear(){
 	space_free(gamelevel.space);
+	gf2d_particle_emitter_free(gamelevel.pe);
 	memset(&gamelevel, 0, sizeof(Level));
 }
 Space* level_get_space(){
@@ -551,12 +578,13 @@ void level_draw(){
 	//gf2d_sprite_draw_image(gamelevel.tileLayer, cam);
 	entity_draw_all(); 
 	//entity_draw(player_get());
-	//gf2d_particle_emitter_draw(gamelevel.pe, cam);
+	gf2d_particle_emitter_draw(gamelevel.pe, cam);
 }
 void level_update(){
 	entity_pre_sync_all();
 	space_update(gamelevel.space);
 	entity_post_sync_all();
+	gf2d_particle_emitter_update(gamelevel.pe);
 }
 
 Level *level_get_level(){
@@ -834,4 +862,8 @@ void level_entity_save(Vector2D pos, char* entityType, char *filename){
 	*/
 	fprintf(write, out);
 	fclose(write);
+}
+ParticleEmitter *level_get_particle_emitter()
+{
+	return gamelevel.pe;
 }
