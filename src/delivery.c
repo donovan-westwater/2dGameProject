@@ -4,6 +4,7 @@
 #include "collisions.h"
 #include "shape.h"
 #include "player.h"
+#include"audio.h"
 Entity *delivery_spawn(Vector2D position){
 	Entity *self;
 	self = entity_new();
@@ -39,6 +40,8 @@ void delivery_update(Entity *self){
 				if (vector2d_magnitude_compare(vector2d(self->position.x - other->position.x, self->position.y - other->position.y), 100) < 0){
 					slog(" ITS WORKING ");
 					//call delivery touch here! (Not nessesary atm)
+					Sound *stor = sound_load("sounds/Deliverymade.mp3", 0, -1);
+					sound_play(stor, 1, 0.2, -1, -1);
 					player_get()->deliveries += 1;
 					entity_free(other);
 					entity_free(self);

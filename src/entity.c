@@ -11,6 +11,7 @@
 #include "collisions.h"
 #include "List.h"
 #include "particle_effects.h"
+#include "audio.h"
 //the code sample we made above
 //A bunch of this code comes from dj's project. This is to give me a start and help me understand systems
 //ADD THINK SYSTEM!
@@ -146,6 +147,8 @@ void entity_update(Entity *ent){
 	//ent->health--;
 	if (ent->health <= 0){
 			ent->_inuse = 0;
+			Sound *stor = sound_load("sounds/Deathsound.mp3",0.1,-1);
+			sound_play(stor,1,0.2,-1,-1);
 			entity_free(ent);
 		
 	}

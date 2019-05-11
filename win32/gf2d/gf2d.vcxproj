@@ -81,6 +81,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\audio.c" />
     <ClCompile Include="..\..\src\camera.c" />
     <ClCompile Include="..\..\src\delivery.c" />
     <ClCompile Include="..\..\src\editor.c" />
@@ -117,6 +118,7 @@
     <ClInclude Include="..\..\include\gf2d_types.h" />
     <ClInclude Include="..\..\include\gf2d_vector.h" />
     <ClInclude Include="..\..\include\simple_logger.h" />
+    <ClInclude Include="..\include\audio.h" />
     <ClInclude Include="..\include\camera.h" />
     <ClInclude Include="..\include\delivery.h" />
     <ClInclude Include="..\include\editor.h" />

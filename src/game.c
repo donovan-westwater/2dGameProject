@@ -13,6 +13,7 @@
 #include "gui.h"
 #include "delivery.h"
 #include "editor.h"
+#include "audio.h"
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
@@ -42,6 +43,7 @@ int main(int argc, char * argv[])
         vector4d(0,0,0,255),
         0); //Window size is 1200 x 720
     gf2d_graphics_set_frame_delay(16);
+	audio_init(256, 16, 4, 1, 1, 1);
     gf2d_sprite_init(1024);
 	entity_system_init(1024);
 
