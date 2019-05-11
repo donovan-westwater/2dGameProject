@@ -278,7 +278,7 @@ Entity *entity_projectile(Entity *self,Vector2D dir){
 
 }
 
-void projectile_touch(Entity *self, Entity *other){
+     void projectile_touch(Entity *self, Entity *other){
 	slog(" I DID A HIT! ");
 	//add free fucntion here
 	if (strcmp(other->hitbox.name, "monster") == 0){
@@ -288,6 +288,7 @@ void projectile_touch(Entity *self, Entity *other){
 		other->health -= 1;
 	}
 	self->_inuse = 0;
+	particle_spray(self->position, self->velocity, gf2d_color(1, 1, 1, 20), 20);
 	entity_free(self);
 }
 
@@ -305,6 +306,7 @@ void projectile_update(Entity *self){
 	self->health--;
 	if (self->health <= 0){
 		self->_inuse = 0;
+		particle_spray(self->position, self->velocity, gf2d_color(1, 1, 1, 20), 20);
 		entity_free(self);
 		//Look up how DJ frees entities
 	}
