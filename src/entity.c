@@ -95,6 +95,7 @@ void entity_draw(Entity *self){
 	vector2d_add(drawPosition, self->position, camera_get_offset());
 
 	if (!self) return;
+	if (!self->sprite) return;
 	gf2d_sprite_draw(
 		self->sprite,
 		drawPosition,
@@ -147,7 +148,7 @@ void entity_update(Entity *ent){
 	//ent->health--;
 	if (ent->health <= 0){
 			ent->_inuse = 0;
-			Sound *stor = sound_load("sounds/Deathsound.mp3",0.1,-1);
+			Sound *stor = sound_load("sounds/Deathsound.mp3",0,-1);
 			sound_play(stor,1,0.2,-1,-1);
 			entity_free(ent);
 		
@@ -259,6 +260,9 @@ Entity *entity_projectile(Entity *self,Vector2D dir){
 	projectile->velocity = dir;
 	if (!self)return;
 	projectile->shape = shape_rect(0, 0, 32, 32);
+	//Sprite *sprite = gf2d_sprite_load_image("images/newspaper.png");
+	projectile->sprite = gf2d_sprite_load_image("images/newspaper.png");
+	projectile->scale = vector2d(0.2, 0.2);
 	body_set(
 		&projectile->hitbox,
 		"projectile",
@@ -281,7 +285,7 @@ Entity *entity_projectile(Entity *self,Vector2D dir){
 
 }
 
-     void projectile_touch(Entity *self, Entity *other){
+void projectile_touch(Entity *self, Entity *other){
 	slog(" I DID A HIT! ");
 	//add free fucntion here
 	if (strcmp(other->hitbox.name, "monster") == 0){

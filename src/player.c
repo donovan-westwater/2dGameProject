@@ -34,7 +34,7 @@ Entity *player_new(Vector2D position){
 	self->deliverTotal = 4;
 	self->health = 50;
 	self->maxHealth = 50;
-	self->sprite = gf2d_sprite_load_image("images/motorcycle_blue.png");
+	self->sprite = gf2d_sprite_load_image("images/player.png");
 	
 	//Define shape
 	self->shape = shape_rect(0, 0, 10, 10);
@@ -55,7 +55,7 @@ Entity *player_new(Vector2D position){
 		self,
 		NULL);
 	//Define postion, scale and rotation (Opt, meant to overide existing values in entity)
-	self->scale = vector2d(1, 1);
+	self->scale = vector2d(0.1, 0.1); // 1 1
 	self->shape = shape_rect(0, 0, 44, 100);
 	//Assign function pointers
 	self->update = player_update;

@@ -73,7 +73,7 @@ int editor_is_in_list(){
 	for (int i = 0; i < get_maxEntites(); i++)
 	{
 		Entity *other = &entList[i];
-		if (other->position.x == editorData.currentTile.x && other->position.y == editorData.currentTile.y){
+		if (other->position.x == editorData.currentTile.x && other->position.y == editorData.currentTile.y && !strcmp(other->hitbox.name,"delivery")){
 			return 1;
 		}
 	}

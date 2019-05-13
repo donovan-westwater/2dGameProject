@@ -167,3 +167,23 @@ wall |8200,0| 200,200|
 
 wall |200,0| 200,200|
 
+
+
+
+
+obsticle |200,1200| flinger|
+monster |400,1200| shooter|
+monster |400,1200| shooter|
+monster |400,1200| shooter|
+monster |400,1200| shooter|
+monster |600,1200| patroller|
+monster |600,1200| patroller|
+monster |600,1200| patroller|
+monster |600,1200| patroller|
+monster |600,1200| patroller|
+monster |800,1200| chaser|
+monster |800,1200| chaser|
+monster |800,1200| chaser|
+monster |800,1200| chaser|
+monster |800,1200| chaser|
+obsticle |1000,1200| block|
