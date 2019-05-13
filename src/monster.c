@@ -12,7 +12,7 @@ Entity *monster_spawn(Vector2D location,MonsterType type){
 	self->velocity = vector2d(0, 0);
 	if (!self)return NULL;
 
-	self->shape = shape_rect(32,32, 64, 64);
+	self->shape = shape_rect(0,0, 64, 72); //32 32 64 64
 	body_set(
 		&self->hitbox,
 		"monster",
@@ -48,7 +48,7 @@ Entity *monster_spawn(Vector2D location,MonsterType type){
 	case SHOOTER:
 		self->think = shooter_think;
 		self->scale = vector2d(0.13, 0.13);
-		Sprite *imp = gf2d_sprite_load_image("images/chaser.png");
+		Sprite *imp = gf2d_sprite_load_all("images/chaser.png",16,64,16);
 		self->sprite = imp;
 		break;
 	}
@@ -69,8 +69,8 @@ void shooter_think(Entity *ent){
 	ent->velocity = vector2d(0, 0);
 	if (ent->timer % 100 == 0){
 		sprite = entity_projectile(ent, vector2d(0, -1));
-		sprite->sprite = gf2d_sprite_load_all("images/sketchball.png", 32, 32, 16);
-		sprite->scale = vector2d(0.13, 0.13);
+		sprite->sprite = gf2d_sprite_load_image("images/sketchball.png");
+		sprite->scale = vector2d(0.06, 0.06);
 	}
 
 }

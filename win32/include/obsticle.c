@@ -24,7 +24,7 @@ Entity *obsticle_spawn(Vector2D position,ObsticleType type){
 	
 	if (type == BLOCK){
 		self->touch = block_touch;
-		self->scale = vector2d(0.13, 0.13);
+		self->scale = vector2d(0.1, 0.1);
 		//Sprite *sprite = gf2d_sprite_load_image("images/Roadblocker.png");
 		//self->sprite = sprite;
 		self->sprite = gf2d_sprite_load_image("images/Roadblocker.png");
@@ -32,7 +32,7 @@ Entity *obsticle_spawn(Vector2D position,ObsticleType type){
 	else{
 		self->think = flinger_think;
 		self->touch = obsticle_touch;
-		self->scale = vector2d(0.3,0.3);
+		self->scale = vector2d(0.13,0.13);
 		//Sprite *sprite = gf2d_sprite_load_image("images/flinger.png");
 		self->sprite = gf2d_sprite_load_image("images/flinger.png");
 

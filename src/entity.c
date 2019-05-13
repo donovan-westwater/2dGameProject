@@ -262,7 +262,7 @@ Entity *entity_projectile(Entity *self,Vector2D dir){
 	projectile->shape = shape_rect(0, 0, 32, 32);
 	//Sprite *sprite = gf2d_sprite_load_image("images/newspaper.png");
 	projectile->sprite = gf2d_sprite_load_image("images/newspaper.png");
-	projectile->scale = vector2d(0.2, 0.2);
+	projectile->scale = vector2d(0.08, 0.08);
 	body_set(
 		&projectile->hitbox,
 		"projectile",

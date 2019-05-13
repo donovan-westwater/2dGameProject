@@ -43,6 +43,8 @@ void delivery_update(Entity *self){
 					sound_play(stor, 1, 0.2, -1, -1);
 					player_get()->deliveries += 1;
 					entity_free(other);
+					Shape *del = &self->shape;
+  					list_delete_data(level_get_space()->staticShapes, del);
 					entity_free(self);
 					}
 				}

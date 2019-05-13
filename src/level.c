@@ -438,8 +438,8 @@ Entity *wall_spawn(double x, double y, double w, double h){
 	
 	//figure out how to properly automate scaling!!
 	//Sprite *sprite = gf2d_sprite_load_all("images/wall.jpg",w-x,h-y,16);
-	self->sprite = NULL;
-
+	self->sprite = gf2d_sprite_load_image("images/house.png");
+	self->scale = vector2d(0.5, 0.35);
 	if (&self->hitbox != NULL){
 		memset(&self->hitbox, 0, sizeof(self->hitbox));
 	}

@@ -34,7 +34,7 @@ Entity *player_new(Vector2D position){
 	self->deliverTotal = 4;
 	self->health = 50;
 	self->maxHealth = 50;
-	self->sprite = gf2d_sprite_load_image("images/player.png");
+	self->sprite = gf2d_sprite_load_image("images/playerv2.png");
 	
 	//Define shape
 	self->shape = shape_rect(0, 0, 10, 10);
@@ -55,7 +55,7 @@ Entity *player_new(Vector2D position){
 		self,
 		NULL);
 	//Define postion, scale and rotation (Opt, meant to overide existing values in entity)
-	self->scale = vector2d(0.1, 0.1); // 1 1
+	self->scale = vector2d(1, 1); // 1 1
 	self->shape = shape_rect(0, 0, 44, 100);
 	//Assign function pointers
 	self->update = player_update;
@@ -112,7 +112,7 @@ void player_update(Entity *self){
 	//slog("%lf", self->rotation.z);
 	//slog("  %lf %lf", (self->velocity.x+1)*self->facing.x, (self->velocity.y+1)*self->facing.y);
 	
-	if (abs(self->velocity.x) > 0.001 && abs(self->velocity.y) > 0.001){
+	if (abs(self->velocity.x) > 0.001 && abs(self->velocity.y) > 0.001){ //use pathagerion therorm to del with this
 		self->velocity.x += -0.001*self->velocity.x;
 		self->velocity.y += -0.001*self->velocity.y;
 	}
@@ -206,7 +206,7 @@ void player_update(Entity *self){
 	if (keys[SDL_SCANCODE_LEFT]) camera_set_position(vector2d(camera_get_position().x - 1, camera_get_position().y));
 	if (keys[SDL_SCANCODE_RIGHT]) camera_set_position(vector2d(camera_get_position().x + 1, camera_get_position().y));
 
-	if (keys[SDL_SCANCODE_SPACE] && self->timer % 40 == 0) {
+	if (keys[SDL_SCANCODE_SPACE] && self->timer % 30 == 0) {
 		double x = mx - self->position.x;
 		double y = my - self->position.y;
 		//slog("%d %d", mx, my);
