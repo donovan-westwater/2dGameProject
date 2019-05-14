@@ -158,8 +158,26 @@ void entity_update(Entity *ent){
 void entity_update_all(){
 	Entity *self;
 	for (int i = 0; i < entityManager.maxEntities; i++){
+		self = &entityManager.entityList[i];
 		if (entityManager.entityList[i]._inuse == 1){
-			self = &entityManager.entityList[i];
+			if (strcmp(self->sprite->filepath, "images/house.png") == 0) continue;
+			if (self->position.x >(camera_get_position().x + camera_get_dimensions().w) && !strcmp(self->hitbox.name, "player") == 0){
+				self->hitbox.inactive = 1;
+				continue;
+			}
+			if (self->position.y > (camera_get_position().y + camera_get_dimensions().h) && !strcmp(self->hitbox.name, "player") == 0){
+				self->hitbox.inactive = 1;
+				continue;
+			}
+			if (self->position.x < (camera_get_position().x) && !strcmp(self->hitbox.name, "player") == 0){
+				self->hitbox.inactive = 1;
+				continue;
+			}
+			if (self->position.y < (camera_get_position().y) && !strcmp(self->hitbox.name, "player") == 0){
+				self->hitbox.inactive = 1;
+				continue;
+			}
+			if (self->sprite != NULL) self->hitbox.inactive = 0;
 			if (entityManager.entityList[i].update != NULL){
 				entityManager.entityList[i].update(self);
 			}
@@ -170,7 +188,26 @@ void entity_think_all(){
 		int i;
 		for (i = 0; i < entityManager.maxEntities; i++)
 		{
+			Entity *self = &entityManager.entityList[i];
 			if (entityManager.entityList[i]._inuse == 0)continue;
+			if (self->sprite != NULL && strcmp(self->sprite->filepath, "images/house.png") == 0) continue;
+			if (self->position.x >(camera_get_position().x + camera_get_dimensions().w) && !strcmp(self->hitbox.name, "player") == 0){
+				self->hitbox.inactive = 1;
+				continue;
+			}
+			if (self->position.y > (camera_get_position().y + camera_get_dimensions().h) && !strcmp(self->hitbox.name, "player") == 0){
+				self->hitbox.inactive = 1;
+				continue;
+			}
+			if (self->position.x < (camera_get_position().x) && !strcmp(self->hitbox.name, "player") == 0){
+				self->hitbox.inactive = 1;
+				continue;
+			}
+			if (self->position.y < (camera_get_position().y) && !strcmp(self->hitbox.name, "player") == 0){
+				self->hitbox.inactive = 1;
+				continue;
+			}
+			if (self->sprite != NULL) self->hitbox.inactive = 0;
 			if (entityManager.entityList[i].think != NULL){
 				entityManager.entityList[i].think(&entityManager.entityList[i]);
 			}
@@ -224,7 +261,26 @@ void entity_pre_sync_all()
     int i;
     for (i = 0; i < entityManager.maxEntities;i++)
     {
+		Entity *self = &entityManager.entityList[i];
         if (entityManager.entityList[i]._inuse == 0)continue;
+		if (strcmp(self->sprite->filepath, "images/house.png") == 0) continue;
+		if (self->position.x >(camera_get_position().x + camera_get_dimensions().w) && !strcmp(self->hitbox.name, "player") == 0){
+			self->hitbox.inactive = 1;
+			continue;
+		}
+		if (self->position.y > (camera_get_position().y + camera_get_dimensions().h) && !strcmp(self->hitbox.name, "player") == 0){
+			self->hitbox.inactive = 1;
+			continue;
+		}
+		if (self->position.x < (camera_get_position().x) && !strcmp(self->hitbox.name, "player") == 0){
+			self->hitbox.inactive = 1;
+			continue;
+		}
+		if (self->position.y < (camera_get_position().y) && !strcmp(self->hitbox.name, "player") == 0){
+			self->hitbox.inactive = 1;
+			continue;
+		}
+		if (self->sprite != NULL) self->hitbox.inactive = 0;
         entity_pre_sync_body(&entityManager.entityList[i]);
     }
 }
@@ -234,7 +290,26 @@ void entity_post_sync_all()
     int i;
     for (i = 0; i < entityManager.maxEntities;i++)
     {
+		Entity *self = &entityManager.entityList[i];
         if (entityManager.entityList[i]._inuse == 0)continue;
+		if (strcmp(self->sprite->filepath, "images/house.png") == 0) continue;
+		if (self->position.x >(camera_get_position().x + camera_get_dimensions().w) && !strcmp(self->hitbox.name, "player") == 0){
+			self->hitbox.inactive = 1;
+			continue;
+		}
+		if (self->position.y > (camera_get_position().y + camera_get_dimensions().h) && !strcmp(self->hitbox.name, "player") == 0){
+			self->hitbox.inactive = 1;
+			continue;
+		}
+		if (self->position.x < (camera_get_position().x) && !strcmp(self->hitbox.name, "player") == 0){
+			self->hitbox.inactive = 1;
+			continue;
+		}
+		if (self->position.y < (camera_get_position().y) && !strcmp(self->hitbox.name, "player") == 0){
+			self->hitbox.inactive = 1;
+			continue;
+		}
+		if (self->sprite != NULL) self->hitbox.inactive = 0;
         entity_post_sync_body(&entityManager.entityList[i]);
     }
 }

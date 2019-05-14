@@ -79,8 +79,8 @@ int main(int argc, char * argv[])
 		level_init(linfo, 1);
 		route_load("levels/route1.txt");
 		
-		if (player_get() == NULL){
-			player_new(vector2d(900, 600));
+		if (player_get() == NULL || (player_get()->position.x == 0 && player_get()->position.y == 0)){
+			player_new(vector2d(600, 600));
 		}
 		//if(check =! NULL) slog("%lf", check->x);
 	}
@@ -144,7 +144,7 @@ int main(int argc, char * argv[])
 			Sprite *victory = gf2d_sprite_load_image("images/victory.png");
 			
 			gf2d_sprite_draw_image(victory, drawPosition);
-			if(keys[SDL_SCANCODE_RETURN])level_transition(vector2d(900, 600));
+			if(keys[SDL_SCANCODE_RETURN])level_transition(vector2d(600, 600));
 			continue;
 		}
 
@@ -182,7 +182,7 @@ int main(int argc, char * argv[])
                 (int)mf);
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 		
-       //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second()); // TURN BACK ON ONCE LEVEL LOADING IS FIXED
+       slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second()); // TURN BACK ON ONCE LEVEL LOADING IS FIXED
 		
     }
 	save_game();
