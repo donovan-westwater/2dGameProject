@@ -164,7 +164,7 @@ int main(int argc, char * argv[])
 			
 		}
 		else{
-			space_update(level_get_space());
+			//space_update(level_get_space());
 			editor_update();
 			
 		}
