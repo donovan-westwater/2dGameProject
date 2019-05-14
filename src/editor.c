@@ -87,7 +87,7 @@ void *editor_delete_entity(){
 	for (int i = 0; i < get_maxEntites(); i++)
 	{
 		Entity *other = &entList[i];
-		if (other->position.x == editorData.currentTile.x && other->position.y == editorData.currentTile.y){
+		if (abs((int)other->position.x - editorData.currentTile.x) < editorData.tilesize.x && abs((int)other->position.y - editorData.currentTile.y)<editorData.tilesize.y){
 			level_wall_delete(other->position, editorData.worldname);
 			level_wall_kill(other->position);
 			return;

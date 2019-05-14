@@ -680,6 +680,30 @@ monster |1800,4000| chaser|
 monster |1600,4400| chaser|
 monster |1600,4400| chaser|
 monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+monster |400,2000| shooter|
+
+
 wall |0,200| 200,200|
+monster |200,200| chaser|
+monster |400,200| patroller|
+monster |400,200| patroller|
+monster |400,200| patroller|
+monster |400,200| patroller|
+
 wall |200,0| 200,200|
 wall |0,0| 200,200|

@@ -675,7 +675,8 @@ void level_wall_delete(Vector2D pos, char *filename){
 	int c, last, del_line, lineno;
 	char tmp[256] = { 0x0 };
 	char delWord[256] = { 0x0 };
-	
+	pos.x = (int)pos.x - ((int)pos.x % 200);
+	pos.y = (int)pos.y - ((int)pos.y % 200);
 	//asks user for file name
 	//printf("Enter file name: ");
 	strcat(delWord, "|");
