@@ -37,17 +37,17 @@ int main(int argc, char * argv[])
     gf2d_graphics_initialize(
         "gf2d",
         1200,
-        720,
+        800, //720
         1200,
-        720,
+        800, //720
         vector4d(0,0,0,255),
-        0); //Window size is 1200 x 720
+        0); //Window size is 1200 x 600
     gf2d_graphics_set_frame_delay(16);
 	audio_init(256, 16, 4, 1, 1, 1);
     gf2d_sprite_init(1024);
 	entity_system_init(1024);
 
-	camera_set_dimensions(0, 0, 1200, 600); //1/2 * bounds.x, 1/3 * bounds.y
+	camera_set_dimensions(0, 0, 1200, 800); //1/2 * bounds.x, 1/3 * bounds.y
 	gui_setup_hud();
 	camera_set_bounds(0, 0,9600, 9600);
     SDL_ShowCursor(SDL_DISABLE);
@@ -79,7 +79,7 @@ int main(int argc, char * argv[])
 		level_init(linfo, 1);
 		route_load("levels/route1.txt");
 		
-		if (player_get() == NULL || (player_get()->position.x == 0 && player_get()->position.y == 0)){
+		if (player_get() == NULL ){ //|| (player_get()->position.x == 0 && player_get()->position.y == 0
 			player_new(vector2d(600, 600));
 		}
 		//if(check =! NULL) slog("%lf", check->x);
@@ -130,20 +130,29 @@ int main(int argc, char * argv[])
 		if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
 		//WIP
 		if (level_get_lose()){
-			Vector2D drawPosition;
-			vector2d_add(drawPosition, camera_get_position(), camera_get_offset()); //Will return a 0 0 vector
+			//Vector2D drawPosition;
+			//vector2d_add(drawPosition, camera_get_position(), vector2d(0,0)); //Will return a 0 0 vector
 			Sprite *failure = gf2d_sprite_load_image("images/failure.png");
-			
-			gf2d_sprite_draw_image(failure, drawPosition);
+			Vector2D scale = vector2d(1, 1);
+			gf2d_sprite_draw(failure, vector2d(0, 0), &scale, NULL, NULL, NULL, NULL,(int)mf);
+		//	if (keys[SDL_SCANCODE_RETURN]){
+		//		entity_clear_all_but_player();
+		//		level_init(linfo, 1);
+		//		route_load("levels/route1.txt");
+//
+//				player_set_position(vector2d(600,600));
+//
+//				adding_all_bodies_to_space(level_get_space());
+//			}
 			continue;
 		}
 		//WIP
 		if (level_get_win()){
-			Vector2D drawPosition;
-			vector2d_add(drawPosition, camera_get_position(), camera_get_offset()); //Will return a 0 0 vector
+			//Vector2D drawPosition;
+			//vector2d_add(drawPosition, camera_get_position(), vector2d(0,0)); //Will return a 0 0 vector
 			Sprite *victory = gf2d_sprite_load_image("images/victory.png");
-			
-			gf2d_sprite_draw_image(victory, drawPosition);
+			Vector2D scale = vector2d(1, 1);
+			gf2d_sprite_draw(victory, vector2d(0, 0), &scale, NULL, NULL, NULL, NULL,(int) mf);
 			if(keys[SDL_SCANCODE_RETURN])level_transition(vector2d(600, 600));
 			continue;
 		}
@@ -182,7 +191,7 @@ int main(int argc, char * argv[])
                 (int)mf);
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 		
-       slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second()); // TURN BACK ON ONCE LEVEL LOADING IS FIXED
+     //  slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second()); // TURN BACK ON ONCE LEVEL LOADING IS FIXED
 		
     }
 	save_game();

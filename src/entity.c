@@ -363,6 +363,7 @@ Entity *entity_projectile(Entity *self,Vector2D dir){
 void projectile_touch(Entity *self, Entity *other){
 	slog(" I DID A HIT! ");
 	//add free fucntion here
+	if (self->health < 0) return;
 	if (strcmp(other->hitbox.name, "monster") == 0){
 		other->health -= 5;
 	}
@@ -372,6 +373,7 @@ void projectile_touch(Entity *self, Entity *other){
 	self->_inuse = 0;
 	particle_spray(self->position, self->velocity, gf2d_color(1, 1, 1, 20), 20);
 	entity_free(self);
+	//self->health -= 100;
 }
 
 void projectile_update(Entity *self){

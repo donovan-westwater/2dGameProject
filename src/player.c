@@ -111,10 +111,10 @@ void player_update(Entity *self){
 	
 	//slog("%lf", self->rotation.z);
 	//slog("  %lf %lf", (self->velocity.x+1)*self->facing.x, (self->velocity.y+1)*self->facing.y);
-	
+	double watch = SDL_sqrt(SDL_pow(self->velocity.x, 2) + SDL_pow(self->velocity.y, 2));
 	if (SDL_sqrt(SDL_pow(self->velocity.x,2)+SDL_pow(self->velocity.y,2)) > 0.001){ //use pathagerion therorm to del with this ogif (abs(self->velocity.x) > 0.001 && abs(self->velocity.y) > 0.001)
-		self->velocity.x += -0.001*self->velocity.x;
-		self->velocity.y += -0.001*self->velocity.y;
+		self->velocity.x += -0.1*self->velocity.x;
+		self->velocity.y += -0.1*self->velocity.y;
 	}
 	else{
 		self->velocity.x = 0;
@@ -137,8 +137,8 @@ void player_update(Entity *self){
 		//self->position.y += 2;
 		Vector2D flip = vector2d(-self->facing.x, -self->facing.y);
 		if (vector2d_equal(self->velocity, vector2d(0, 0))) vector2d_copy(self->velocity, flip);
-		self->velocity.x -= 0.9*self->velocity.x;
-		self->velocity.y -= 0.9*self->velocity.y;
+		self->velocity.x -= 0.2*self->velocity.x;
+		self->velocity.y -= 0.2*self->velocity.y;
 		
 		
 	}

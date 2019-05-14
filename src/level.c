@@ -402,7 +402,8 @@ void load_game(){
 		}
 		if (c == '|'){
 			y = atof(input);
-			player_new(vector2d(x,y));
+			if (x == 0 && y == 0) player_new(vector2d(600,600));
+			else player_new(vector2d(x,y));
 		}
 		else{
 			if (c == ','){
@@ -630,6 +631,7 @@ int body_body_touch(Body *self, List *collisionList)
 	
 	for (i = 0; i < count; i++)
 	{
+		if (!self->data) return 0;
 		c = (Collision *)list_get_nth(collisionList, i);
 		if (!c)continue;
 		if (!c->body)continue;
